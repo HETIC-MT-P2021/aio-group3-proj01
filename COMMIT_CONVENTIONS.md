@@ -5,7 +5,7 @@
 
 The `Tag` is one of the following:
 
-`Build:`-Changes that affect the build system or external dependencies (npm, make…)
+`Build:`-Changes that affect the build system or external dependencies (docker, npm, make…)
 `CI:`-Changes concerning the integration or configuration files and scripts (Travis, Ansible, BrowserStack ...)
 `Feat:`-Added new functionality
 `Fix:`-Bug fix
