@@ -11,6 +11,17 @@
 
 ## Project setup
 
+Without docker : 
+
+To run this project, you will need to install the following dependencies on your system:
+- [Elixir](https://elixir-lang.org/install.html)
+- [Phoenix](https://hexdocs.pm/phoenix/installation.html)
+- [PostgreSQL](https://www.postgresql.org/download/macosx/)
+
+With docker : 
+
+
+
 ## Pull requests (PR)
 
 Pull requests in this project follow two conventions, you will need to use the templates available in the [ISSUE_TEMPLATE](.github/ISSUE_TEMPLATE) folder :
