@@ -5,6 +5,11 @@
 - Docker-compose configuration
 - AWS Infrastructure scheme
 
+## Requirements
+* Docker;
+* Docker-Compose;
+
+## Project setup
 
 ## Pull requests (PR)
 
