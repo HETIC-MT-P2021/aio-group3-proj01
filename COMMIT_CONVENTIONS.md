@@ -2,7 +2,7 @@
 
 The `Tag` should be in the list above
 
-The `scope` should define the context of the affected changes.
+The `Scope` should define the context of the affected changes.
 
 The `Message` should not be confused with git commit message.
 
