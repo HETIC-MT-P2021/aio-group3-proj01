@@ -1,3 +1,9 @@
+### Mac file system ###
+.DS_Store
+
+### JetBrains ###
+.idea
+
 ### Elixir ###
 /_build
 /cover
@@ -7,30 +13,19 @@
 erl_crash.dump
 *.ez
 *.beam
-/config/*.secret.exs
-.elixir_ls/
 
+### Elixir Patch ###
 ### Phoenix ###
-# Temporary files
-/tmp
-
-# Static artifacts
-/node_modules
-/assets/node_modules
-
-# Since we are building assets from web/static,
-# we ignore priv/static. You may want to comment
-# this depending on your deployment strategy.
+# Phoenix: a web framework for Elixir
+_build/
+/db
+/*.ez
+node_modules/
 /priv/static/
+/config/prod.secret.exs
+/rel
 
-# Installer-related files
-/installer/_build
-/installer/tmp
-/installer/doc
-/installer/deps
-
-### Elm ###
-# elm-package generated files
-elm-stuff
-# elm-repl generated files
-repl-temp-*
+### DOCKER ###
+# database volume to save database data on container removale
+/volumes
+/assets/node_modules
