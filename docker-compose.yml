@@ -26,5 +26,12 @@ services:
       - 4000:4000
     depends_on:
       - db
+  elm-app:
+    build: ./source/frontend/.
+    command: elm reactor
+    ports:
+      - 8000:8000
+    depends_on:
+      - phoenix
 volumes:
   pgdata:
