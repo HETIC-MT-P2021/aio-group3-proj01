@@ -39,16 +39,10 @@ Our images entities have the following properties:
 
     `GET`
 - Data params
-    ```json
-    {
-        "tags": [
-            "socker",
-            "football"
-        ],
-        "category": "sport"
-    }
-    ```
-    These params will ask the API for the images containing `socker` or `football` tags and which belong to the sport `category`.
+
+    None
+    
+`category`.
 
 #### Add images
 - URL
