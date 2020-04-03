@@ -64,6 +64,7 @@ Our images entities have the following properties:
 - Data params
     ```json
     {
+        "id": "33",
         "description": "this is the best image ever",
         "image": "/file_path",
         "category": "sport",
@@ -83,6 +84,7 @@ Our images entities have the following properties:
 - Data params
     ```json
     {
+        "id": "33",
         "description": "this is the worse image ever",
         "image": "/file_path",
         "category": "sport",
