@@ -9,7 +9,7 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     restart: always
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - ./pgdata:/var/lib/postgresql/data
   phoenix:
     build: .docker/backend/.
     volumes:
@@ -29,7 +29,7 @@ services:
   elm-app:
     build: .docker/frontend/.
     volumes:
-    - './source/frontend/:/elm-app'
+      - ./source/frontend/:/elm-app
     command: elm reactor
     ports:
       - 8000:8000
