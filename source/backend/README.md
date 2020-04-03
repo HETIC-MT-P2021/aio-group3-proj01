@@ -42,8 +42,8 @@ Our images entities have the following properties:
     ```json
     {
         "tags": [
-            'socker',
-            'football'
+            "socker",
+            "football"
         ],
         "category": "sport"
     }
@@ -60,10 +60,10 @@ Our images entities have the following properties:
 - Data params
     ```json
     {
-        description: "this is the best image ever",
-        image: "/file_path",
-        category: "sport",
-        tags: ["soccer"]
+        "description": "this is the best image ever",
+        "image": "/file_path",
+        "category": "sport",
+        "tags": ["soccer"]
     }
     ```
 
@@ -79,10 +79,10 @@ Our images entities have the following properties:
 - Data params
     ```json
     {
-        description: "this is the worse image ever",
-        image: "/file_path",
-        category: "sport",
-        tags: ["soccer"]
+        "description": "this is the worse image ever",
+        "image": "/file_path",
+        "category": "sport",
+        "tags": ["soccer"]
     }
     ```
 
@@ -155,7 +155,7 @@ Our categories entities have the following properties:
 - Data params
     ```json
     {
-        name: "sport"
+        "name": "sport"
     }
     ```
 
@@ -169,7 +169,7 @@ Our categories entities have the following properties:
 - Data params
     ```json
     {
-        name: "Sport"
+        "name": "Sport"
     }
     ```
 
@@ -215,7 +215,7 @@ Our tags entities have the following properties:
 
     ```json
     {
-        name: "soccer"
+        "name": "soccer"
     }
     ```
 
@@ -230,7 +230,7 @@ Our tags entities have the following properties:
 - Data params
     ```json
     {
-        name: "football"
+        "name": "football"
     }
     ```
 
