@@ -35,7 +35,7 @@ The `Tag` is one of the following:
 Examples:
 
 ```
-Feat(frontend): Added /category route to access images by category.
-Fix(database): Added migration to correct category structure.
-CI(backend): Added linter tests
+Feat (frontend): Added /category route to access images by category.
+Fix (database): Added migration to correct category structure.
+CI (backend): Added linter tests
 ```
