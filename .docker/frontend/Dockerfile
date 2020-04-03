@@ -5,9 +5,6 @@ LABEL maintainer="Edouin Vautier, Jason Gauvin, Jack Maarek <https://github.com/
 RUN mkdir /elm-app
 WORKDIR /elm-app
 
-COPY ./elm-app .
-
-
 # Install curl package
 RUN apk update && apk add --update curl && apk add --update nodejs npm && \
     # Install elm

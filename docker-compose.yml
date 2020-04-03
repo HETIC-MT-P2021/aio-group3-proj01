@@ -27,7 +27,9 @@ services:
     depends_on:
       - db
   elm-app:
-    build: ./source/frontend/.
+    build: .docker/frontend/.
+    volumes:
+    - './source/frontend/:/elm-app'
     command: elm reactor
     ports:
       - 8000:8000
