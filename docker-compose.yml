@@ -1,19 +1,6 @@
 version: '3.7'
 
 services:
-  phoenix:
-    build: ./source/backend/.
-    command: ../docker-start.sh
-    environment:
-      PGUSER: postgres
-      PGPASSWORD: postgres
-      PGDATABASE: database_name
-      PGPORT: 5432
-      PGHOST: db
-    ports:
-      - "4000:4000"
-    depends_on:
-      - db
   db:
     image: postgres:9.6
     environment:
@@ -23,5 +10,21 @@ services:
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
+  phoenix:
+    build: .docker/backend/.
+    volumes:
+    - ./source/backend/api_app:/backend
+    - .docker/backend/phoenix-setup.sh:/phoenix-setup.sh
+    command: ../phoenix-setup.sh
+    environment:
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: database_name
+      PGPORT: 5432
+      PGHOST: db
+    ports:
+      - 4000:4000
+    depends_on:
+      - db
 volumes:
   pgdata:
