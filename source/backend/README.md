@@ -42,7 +42,17 @@ Our images entities have the following properties:
 
     None
     
-`category`.
+#### Get image by id
+- URL
+
+    `/images:id`
+- Method
+
+    `GET`
+- Data params
+
+    None
+    
 
 #### Add images
 - URL
