@@ -9,5 +9,6 @@ defmodule ApiAppWeb.Router do
     pipe_through :api
 
     resources "/categories", CategoriesController, except: [:new, :edit]
+    resources "/tags", TagsController, except: [:new, :edit]
   end
 end
