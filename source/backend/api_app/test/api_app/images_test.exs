@@ -90,7 +90,6 @@ defmodule ApiApp.ImagesTest do
 
     test "create_tags/1 with valid data creates a tags" do
       assert {:ok, %Tags{} = tags} = Images.create_tags(@valid_attrs)
-      assert tags.id == 42
       assert tags.name == "some name"
     end
 
@@ -101,7 +100,6 @@ defmodule ApiApp.ImagesTest do
     test "update_tags/2 with valid data updates the tags" do
       tags = tags_fixture()
       assert {:ok, %Tags{} = tags} = Images.update_tags(tags, @update_attrs)
-      assert tags.id == 43
       assert tags.name == "some updated name"
     end
 

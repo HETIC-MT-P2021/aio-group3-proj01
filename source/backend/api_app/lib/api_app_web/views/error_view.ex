@@ -15,7 +15,7 @@ defmodule ApiAppWeb.ErrorView do
   end
 
   def render("500.json", _assigns) do
-    %{errors: %{detail: "Internal server error :("}}
+    %{errors: %{detail: "Internal Server Error!"}}
   end
 
   def template_not_found(template, _assigns) do
