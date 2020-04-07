@@ -29,3 +29,5 @@ node_modules/
 # database volume to save database data on container removale
 /volumes
 /assets/node_modules
+
+pgdata

@@ -7,5 +7,7 @@ defmodule ApiAppWeb.Router do
 
   scope "/api", ApiAppWeb do
     pipe_through :api
+
+    resources "/categories", CategoriesController, except: [:new, :edit]
   end
 end
