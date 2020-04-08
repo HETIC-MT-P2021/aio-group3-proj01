@@ -28,7 +28,8 @@ defmodule ApiAppWeb.CategoriesController do
   def update(conn, %{"id" => id, "categories" => categories_params}) do
     categories = Images.get_categories!(id)
 
-    with {:ok, %Categories{} = categories} <- Images.update_categories(categories, categories_params) do
+    with {:ok, %Categories{} = categories} <-
+           Images.update_categories(categories, categories_params) do
       render(conn, "show.json", categories: categories)
     end
   end

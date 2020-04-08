@@ -11,7 +11,6 @@ defmodule ApiAppWeb.CategoriesView do
   end
 
   def render("categories.json", %{categories: categories}) do
-    %{id: categories.id,
-      name: categories.name}
+    %{id: categories.id, name: categories.name}
   end
 end
