@@ -10,9 +10,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Setup elixir
@@ -21,6 +19,8 @@ jobs:
           elixir-version: 1.10.2
           otp-version: 22.2
       - name: Install Dependencies
+        working-directory: ./source/backend/api_app
         run: mix deps.get
       - name: Run Tests
+        working-directory: ./source/backend/api_app
         run: mix test test/api_app/ test/api_app_web/views
