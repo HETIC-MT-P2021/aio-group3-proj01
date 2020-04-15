@@ -1,0 +1,107 @@
+on:
+  push:
+    branches:
+      - master
+      - dev
+  pull_request:
+    branches:
+      - master
+      - dev
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:9.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup elixir
+        uses: actions/setup-elixir@v1
+        with:
+          elixir-version: 1.10.2
+          otp-version: 22.2
+      - name: Use Node.js 11.6.0
+        uses: actions/setup-node@v1
+        with:
+          node-version: 11.6.0
+      - name: Install frontent dependencies
+        run: npm install -g elm
+      - name: Install backend dependencies
+        working-directory: ./source/backend/api_app
+        run: mix deps.get
+
+  linter:
+    if: "! contains(toJSON(github.event.commits.*.message), 'ci_skip_lint')"
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:9.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup elixir
+        uses: actions/setup-elixir@v1
+        with:
+          elixir-version: 1.10.2
+          otp-version: 22.2
+      - name: Use Node.js 11.6.0
+        uses: actions/setup-node@v1
+        with:
+          node-version: 11.6.0
+      - name: Install frontent dependencies
+        run: npm install -g elm elm-format
+      - name: Format backend files
+        working-directory: ./source/backend/api_app
+        run: mix deps.get && mix format
+      - name: Analyse frontend files
+        working-directory: ./source/frontend
+        run: elm-format
+
+  test:
+    if: "! contains(toJSON(github.event.commits.*.message), 'ci_skip_test')"
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:9.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup elixir
+        uses: actions/setup-elixir@v1
+        with:
+          elixir-version: 1.10.2
+          otp-version: 22.2
+      - name: Use Node.js 11.6.0
+        uses: actions/setup-node@v1
+        with:
+          node-version: 11.6.0
+      - name: Install frontent dependencies
+        run: npm install -g elm elm-test
+      - name: Test backend files
+        working-directory: ./source/backend/api_app
+        run: mix deps.get && mix test test/api_app/ test/api_app_web/views
