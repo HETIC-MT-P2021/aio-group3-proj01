@@ -72,7 +72,7 @@ jobs:
         run: mix deps.get && mix format
       - name: Analyse frontend files
         working-directory: ./source/frontend
-        run: elm-analyse
+        run: elm-format
 
   test:
     if: "! contains(toJSON(github.event.commits.*.message), 'ci_skip_test')"
