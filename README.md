@@ -1,4 +1,4 @@
-![.github/workflows/CI.yaml](https://github.com/HETIC-MT-P2021/aio-group3-proj01/workflows/.github/workflows/CI.yaml/badge.svg)
+![CI status](https://github.com/HETIC-MT-P2021/aio-group3-proj01/workflows/.github/workflows/CI.yaml/badge.svg)
 
 # ELM-Project
 
