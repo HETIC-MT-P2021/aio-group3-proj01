@@ -7,10 +7,21 @@ on:
     branches:
       - master
       - dev
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:9.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v2
       - name: Setup elixir
@@ -18,9 +29,16 @@ jobs:
         with:
           elixir-version: 1.10.2
           otp-version: 22.2
-      - name: Install Dependencies
+      - name: Use Node.js 11.6.0
+        uses: actions/setup-node@v1
+        with:
+          node-version: 11.6.0
+      - name: Install dependencies
+        run: npm install -g elm
+      - name: Install backend dependencies
         working-directory: ./source/backend/api_app
         run: mix deps.get
-      - name: Run Tests
+      - name: Run backend tests
         working-directory: ./source/backend/api_app
         run: mix test test/api_app/ test/api_app_web/views
+
