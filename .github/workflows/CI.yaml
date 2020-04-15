@@ -105,6 +105,3 @@ jobs:
       - name: Test backend files
         working-directory: ./source/backend/api_app
         run: mix deps.get && mix test test/api_app/ test/api_app_web/views
-      - name: Test frontend files
-        working-directory: ./source/frontend
-        run: elm-test
