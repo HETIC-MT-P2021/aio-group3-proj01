@@ -13,7 +13,7 @@ view model =
             , text <|
                 """"
                 ) is a micro financial company to help community
-                reach funds by launching crowdfunding projects !
+                reach funds by launching crowdfunding projects ! BIJOOJ!
                 """
             ]
         ]
