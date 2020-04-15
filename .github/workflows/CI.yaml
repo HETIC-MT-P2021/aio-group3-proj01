@@ -66,7 +66,7 @@ jobs:
         with:
           node-version: 11.6.0
       - name: Install frontent dependencies
-        run: npm install -g elm elm-analyse
+        run: npm install -g elm elm-format
       - name: Format backend files
         working-directory: ./source/backend/api_app
         run: mix deps.get && mix format
