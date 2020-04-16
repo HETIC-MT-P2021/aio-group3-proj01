@@ -94,7 +94,8 @@ view model =
           , viewLink "/reviews/public-opinion"
           , viewLink "https://github.com/edwinvautier"
           , viewLink "https://elmprogramming.com/virtual-dom.html"
-          ]
+          ],
+        viewMain model
       ]
     }
 
