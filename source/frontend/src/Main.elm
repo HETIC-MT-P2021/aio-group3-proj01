@@ -5,7 +5,21 @@ import Html.Attributes exposing (..)
 import Browser
 import Browser.Navigation as Nav
 import Url
+import Url.Parser exposing (Parser, (</>), int, map, oneOf, s, string)
 
+import Pages.Home as Home
+import Pages.About as About
+
+type Route = 
+    Home
+    | About
+
+routeParser : Parser (Route -> a) a
+routeParser =
+  oneOf
+    [ Url.Parser.map Home (Url.Parser.s "home")
+    , Url.Parser.map About (Url.Parser.s "about")
+    ]
 
 main : Program (Maybe Int) Model Msg
 main =
@@ -22,7 +36,8 @@ main =
 type alias Model =
     { key : Nav.Key
     , url : Url.Url
-    , counter: Maybe Int
+    , counter: Maybe Int,
+    route: String
     }
 
 
@@ -78,6 +93,7 @@ view model =
           , viewLink "/reviews/the-century-of-the-self"
           , viewLink "/reviews/public-opinion"
           , viewLink "https://github.com/edwinvautier"
+          , viewLink "https://elmprogramming.com/virtual-dom.html"
           ]
       ]
     }
@@ -86,3 +102,11 @@ view model =
 viewLink : String -> Html msg
 viewLink path =
   li [] [ a [ href path ] [ text path ] ]
+
+viewMain : Model -> Html msg
+viewMain model = 
+    case model.route of
+        Home ->
+            Home.view {name = "Edwin"}
+        About ->
+            About.view {name = "Edwin"}
