@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ### Mac file system ###
 .DS_Store
 
@@ -32,19 +31,3 @@ node_modules/
 /assets/node_modules
 
 pgdata
-=======
-# Distribution
-build/
-
-# elm-package generated files
-elm-stuff
-
-# elm-repl generated files
-repl-temp-*
-
-# Dependency directories
-node_modules
-
-# Desktop Services Store on macOS
-.DS_Store
->>>>>>> :sparkles: Main app working without router yet
