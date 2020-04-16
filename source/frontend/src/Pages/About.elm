@@ -1,4 +1,4 @@
-module Pages.About exposing (main, view)
+module Pages.About exposing (main, view, Msg)
 
 import Browser
 import Html exposing (..)
