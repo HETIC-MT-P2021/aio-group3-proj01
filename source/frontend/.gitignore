@@ -31,3 +31,5 @@ node_modules/
 /assets/node_modules
 
 pgdata
+
+elm-stuff

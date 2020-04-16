@@ -3,7 +3,8 @@
 The following routes are available on our front-end, and enable you to see the API content simply.
 
 ## URL
-the project is available at the following url: 
+
+the project is available at the following url:
 [no-domain-chosen-yet.fr](https://no-domain-chosen-yet.fr)
 
 ## Routes

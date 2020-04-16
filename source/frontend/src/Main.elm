@@ -34,16 +34,18 @@ main =
 
 
 type alias Model =
-    { key : Nav.Key
+    { flags : (Maybe Int)
+    , key : Nav.Key
     , url : Url.Url
-    , counter: Maybe Int,
-    route: String
+    , route: Route
     }
 
 
 init : Maybe Int -> Url.Url -> Nav.Key -> (Model, Cmd Msg)
-init counter url key =
-    (Model key url counter, Cmd.none)
+init flags url key =
+    ( { flags = flags, key = key, url = url, route = Home }
+    , Cmd.none
+    )
 
 
 type Msg
@@ -51,7 +53,8 @@ type Msg
     | Msg2
     | UrlRequested Browser.UrlRequest
     | UrlChanged Url.Url
-
+    | HomeMsg Home.Msg
+    | AboutMsg About.Msg
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -75,6 +78,11 @@ update msg model =
             , Cmd.none
             )
 
+        HomeMsg content ->
+            (model, Cmd.none)
+
+        AboutMsg content ->
+            (model, Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -99,14 +107,14 @@ view model =
     }
 
 
-viewLink : String -> Html msg
+viewLink : String -> Html Msg
 viewLink path =
   li [] [ a [ href path ] [ text path ] ]
 
-viewMain : Model -> Html msg
+viewMain : Model -> Html Msg
 viewMain model = 
     case model.route of
         Home ->
-            Home.view {name = "Edwin"}
+            Home.view ({name = "Edwin"}) |> Html.map HomeMsg
         About ->
-            About.view {name = "Edwin"}
+            About.view {name = "Edwin"} |> Html.map AboutMsg
