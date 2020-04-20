@@ -14,13 +14,6 @@ type Route =
     Home
     | About
 
-routeParser : Parser (Route -> a) a
-routeParser =
-  oneOf
-    [ Url.Parser.map Home (Url.Parser.s "home")
-    , Url.Parser.map About (Url.Parser.s "about")
-    ]
-
 main : Program (Maybe Int) Model Msg
 main =
     Browser.application
@@ -48,10 +41,8 @@ init flags url key =
     )
 
 
-type Msg
-    = Msg1
-    | Msg2
-    | UrlRequested Browser.UrlRequest
+type Msg =
+    UrlRequested Browser.UrlRequest
     | UrlChanged Url.Url
     | HomeMsg Home.Msg
     | AboutMsg About.Msg
@@ -59,12 +50,6 @@ type Msg
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
     case msg of
-        Msg1 ->
-            (model, Cmd.none)
-
-        Msg2 ->
-            (model, Cmd.none)
-
         UrlRequested urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
@@ -97,7 +82,7 @@ view model =
       , b [] [ text (Url.toString model.url) ]
       , ul []
           [ viewLink "/home"
-          , viewLink "/profile"
+          , viewLink "/about"
           , viewLink "/reviews/the-century-of-the-self"
           , viewLink "/reviews/public-opinion"
           , viewLink "https://github.com/edwinvautier"
@@ -114,8 +99,10 @@ viewLink path =
 
 viewMain : Model -> Html Msg
 viewMain model = 
-    case model.route of
-        Home ->
+    case model.url.path of
+        "/home" ->
             Home.view ({name = "Edwin"}) |> Html.map HomeMsg
-        About ->
+        "/about" ->
             About.view {name = "Edwin"} |> Html.map AboutMsg
+        _ ->
+            Home.view ({name = "Edwin"}) |> Html.map HomeMsg
