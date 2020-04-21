@@ -8,9 +8,8 @@ defmodule ApiApp.Repo.Migrations.CreateImage do
       add :image, :string
       add :category_id, references(:category, on_delete: :delete_all)
 
+
       timestamps()
     end
-
-    create index(:image, [:category_id])
   end
 end

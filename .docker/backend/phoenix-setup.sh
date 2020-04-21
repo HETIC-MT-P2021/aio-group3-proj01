@@ -2,5 +2,5 @@
 
 mix deps.get # install project depencies
 mix ecto.create
-mix ecto.migrate  # migrate your database if Ecto is used
+mix ecto.migrate
 exec mix phx.server

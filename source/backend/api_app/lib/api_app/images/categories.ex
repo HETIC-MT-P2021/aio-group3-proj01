@@ -4,6 +4,7 @@ defmodule ApiApp.Images.Categories do
 
   schema "category" do
     field :name, :string
+    has_many :image, ApiApp.Images.Image, foreign_key: :image_id
 
     timestamps()
   end

@@ -1,5 +1,6 @@
 defmodule ApiApp.Repo.Migrations.CreateCategory do
   use Ecto.Migration
+  alias Images.Image
 
   def change do
     create table(:category) do

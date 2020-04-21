@@ -26,6 +26,12 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Use waffle for image handling
+config :waffle,
+       storage: Waffle.Storage.Local,
+       storage_dir_prefix: "priv/waffle/private",
+       asset_host: "http://loclhost:4000"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
