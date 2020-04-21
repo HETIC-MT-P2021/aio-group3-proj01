@@ -6,9 +6,9 @@ defmodule ApiApp.ImagesTest do
   describe "category" do
     alias ApiApp.Images.Categories
 
-    @valid_attrs %{name: "some name"}
-    @update_attrs %{name: "some updated name"}
-    @invalid_attrs %{name: nil}
+    @valid_attrs %{id: 42, name: "some name"}
+    @update_attrs %{id: 42, name: "some updated name"}
+    @invalid_attrs %{id: nil, name: nil}
 
     def categories_fixture(attrs \\ %{}) do
       {:ok, categories} =
@@ -127,8 +127,9 @@ defmodule ApiApp.ImagesTest do
   describe "image" do
     alias ApiApp.Images.Image
 
-    @valid_attrs %{description: "some description", image: "some image", name: "some name"}
+    @valid_attrs %{category_id: 1, description: "some description", image: "some image", name: "some name"}
     @update_attrs %{
+      category_id: 1,
       description: "some updated description",
       image: "some updated image",
       name: "some updated name"

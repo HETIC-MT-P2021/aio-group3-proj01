@@ -8,7 +8,6 @@ defmodule ApiAppWeb.ImageController do
 
   def index(conn, _params) do
     image = Images.list_image()
-    categories = Images.list_category()
     render(conn, "index.json", image: image)
   end
 
