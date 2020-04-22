@@ -32,4 +32,4 @@ node_modules/
 
 pgdata
 
-elm-stuff
+/source/frontend/elm-stuff

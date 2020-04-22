@@ -1,108 +1,188 @@
-module Main exposing (Model, init, Msg, update, view, subscriptions)
+module Main exposing (main)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Browser
+import Browser exposing (Document)
 import Browser.Navigation as Nav
-import Url
-import Url.Parser exposing (Parser, (</>), int, map, oneOf, s, string)
+import Html exposing (..)
+import Url exposing (Url)
 
-import Pages.Home as Home
-import Pages.About as About
+import Page exposing (Page)
+import Page.Home as Home
+import Page.NewImage as NewImage
+import Page.Blank as Blank
+import Page.NotFound as NotFound
 
-type Route = 
-    Home
-    | About
+import Route exposing (Route)
+import Session exposing (Session)
 
-main : Program (Maybe Int) Model Msg
+type Model
+    = Redirect Session
+    | NotFound Session
+    | Home Home.Model
+    | NewImage NewImage.Model
+
+-- MODEL
+
+init : Int -> Url -> Nav.Key -> ( Model, Cmd Msg )
+init flags url navKey =
+    changeRouteTo (Route.fromUrl url)
+        (Redirect (Session.fromViewer navKey))
+
+-- MAIN
+
+main : Program Int Model Msg
 main =
     Browser.application
         { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
-        , onUrlRequest = UrlRequested
-        , onUrlChange = UrlChanged
-    }
+        , onUrlChange = ChangedUrl
+        , onUrlRequest = ClickedLink
+        }
+
+-- VIEW
 
 
-type alias Model =
-    { flags : (Maybe Int)
-    , key : Nav.Key
-    , url : Url.Url
-    , route: Route
-    }
+view : Model -> Document Msg
+view model =
+    let
+        viewPage page toMsg config =
+            let
+                { title, body } =
+                    Page.view page config
+            in
+            { title = title
+            , body = List.map (Html.map toMsg) body
+            }
+    in
+    case model of
+        Redirect _ ->
+            Page.view Page.Other Blank.view
+
+        NotFound _ ->
+            Page.view Page.Other NotFound.view
+
+        NewImage newImage ->
+            viewPage Page.NewImage NewImageMsg (NewImage.view newImage)
+
+        Home home ->
+            viewPage Page.Home HomeMsg (Home.view home)
 
 
-init : Maybe Int -> Url.Url -> Nav.Key -> (Model, Cmd Msg)
-init flags url key =
-    ( { flags = flags, key = key, url = url, route = Home }
-    , Cmd.none
+-- UPDATE
+
+
+type Msg
+    = ChangedUrl Url
+    | ClickedLink Browser.UrlRequest
+    | HomeMsg Home.Msg
+    | NewImageMsg NewImage.Msg
+
+toSession : Model -> Session
+toSession page =
+    case page of
+        Redirect session ->
+            session
+
+        NotFound session ->
+            session
+
+        Home home ->
+            Home.toSession home
+
+        NewImage newImage ->
+            NewImage.toSession newImage
+
+
+changeRouteTo : Maybe Route -> Model -> ( Model, Cmd Msg )
+changeRouteTo maybeRoute model =
+    let
+        session =
+            toSession model
+    in
+    case maybeRoute of
+        Nothing ->
+            ( NotFound session, Cmd.none )
+
+        Just Route.Root ->
+            ( model, Route.replaceUrl (Session.navKey session) Route.Home )
+
+        Just Route.Home ->
+            Home.init session
+                |> updateWith Home HomeMsg model
+
+        Just Route.NewImage ->
+            NewImage.init session
+                |> updateWith NewImage NewImageMsg model
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case ( msg, model ) of
+        ( ClickedLink urlRequest, _ ) ->
+            case urlRequest of
+                Browser.Internal url ->
+                    case url.fragment of
+                        Nothing ->
+                            -- If we got a link that didn't include a fragment,
+                            -- it's from one of those (href "") attributes that
+                            -- we have to include to make the RealWorld CSS work.
+                            --
+                            -- In an application doing path routing instead of
+                            -- fragment-based routing, this entire
+                            -- `case url.fragment of` expression this comment
+                            -- is inside would be unnecessary.
+                            ( model, Cmd.none )
+
+                        Just _ ->
+                            ( model
+                            , Nav.pushUrl (Session.navKey (toSession model)) (Url.toString url)
+                            )
+
+                Browser.External href ->
+                    ( model
+                    , Nav.load href
+                    )
+
+        ( ChangedUrl url, _ ) ->
+            changeRouteTo (Route.fromUrl url) model
+
+       
+        ( HomeMsg subMsg, Home home ) ->
+            Home.update subMsg home
+                |> updateWith Home HomeMsg model
+
+        ( NewImageMsg subMsg, NewImage newImage ) ->
+            NewImage.update subMsg newImage
+                |> updateWith NewImage NewImageMsg model
+
+        ( _, _ ) ->
+            -- Disregard messages that arrived for the wrong page.
+            ( model, Cmd.none )
+
+
+updateWith : (subModel -> Model) -> (subMsg -> Msg) -> Model -> ( subModel, Cmd subMsg ) -> ( Model, Cmd Msg )
+updateWith toModel toMsg model ( subModel, subCmd ) =
+    ( toModel subModel
+    , Cmd.map toMsg subCmd
     )
 
 
-type Msg =
-    UrlRequested Browser.UrlRequest
-    | UrlChanged Url.Url
-    | HomeMsg Home.Msg
-    | AboutMsg About.Msg
 
-update : Msg -> Model -> (Model, Cmd Msg)
-update msg model =
-    case msg of
-        UrlRequested urlRequest ->
-            case urlRequest of
-                Browser.Internal url ->
-                    ( model, Nav.pushUrl model.key (Url.toString url) )
+-- SUBSCRIPTIONS
 
-                Browser.External href ->
-                    ( model, Nav.load href )
-
-        UrlChanged url ->
-            ( { model | url = url }
-            , Cmd.none
-            )
-
-        HomeMsg content ->
-            (model, Cmd.none)
-
-        AboutMsg content ->
-            (model, Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    case model of
+        NotFound _ ->
+            Sub.none
 
+        Redirect _ ->
+            Sub.none
 
-view : Model -> Browser.Document Msg
-view model =
-    { title = "Home"
-    , body =
-      [ text "The current URL is: "
-      , b [] [ text (Url.toString model.url) ]
-      , ul []
-          [ viewLink "/home"
-          , viewLink "/about"
-          , viewLink "/reviews/the-century-of-the-self"
-          , viewLink "/reviews/public-opinion"
-          , viewLink "https://github.com/edwinvautier"
-          , viewLink "https://elmprogramming.com/virtual-dom.html"
-          ],
-        viewMain model
-      ]
-    }
+        NewImage newImage ->
+            Sub.map NewImageMsg (NewImage.subscriptions newImage)
 
-
-viewLink : String -> Html Msg
-viewLink path =
-  li [] [ a [ href path ] [ text path ] ]
-
-viewMain : Model -> Html Msg
-viewMain model = 
-    case model.url.path of
-        "/home" ->
-            Home.view ({name = "Edwin"}) |> Html.map HomeMsg
-        "/about" ->
-            About.view {name = "Edwin"} |> Html.map AboutMsg
-        _ ->
-            Home.view ({name = "Edwin"}) |> Html.map HomeMsg
+        Home home ->
+            Sub.map HomeMsg (Home.subscriptions home)
