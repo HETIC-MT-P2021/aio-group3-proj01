@@ -29,10 +29,10 @@ services:
   elm-app:
     build: .docker/frontend/.
     volumes:
-      - ./source/frontend/:/elm-app
-    command: elm reactor
+      - ./source/frontend/:/frontend
+    command: elm-app start
     ports:
-      - 8000:8000
+      - 3000:3000
     depends_on:
       - phoenix
 volumes:

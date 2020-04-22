@@ -1,16 +1,21 @@
 FROM alpine:latest
 
-LABEL maintainer="Edouin Vautier, Jason Gauvin, Jack Maarek <https://github.com/HETIC-MT-P2021/aio-group3-proj01>"
+LABEL maintainer="Edwin Vautier, Jason Gauvin, Jack Maarek <https://github.com/HETIC-MT-P2021/aio-group3-proj01>"
 
-RUN mkdir /elm-app
-WORKDIR /elm-app
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+
+ENV PATH=$PATH:/home/node/.npm-global/bin
+
+RUN mkdir /frontend
+WORKDIR /frontend
 
 # Install curl package
-RUN apk update && apk add --update curl && apk add --update nodejs npm && \
+RUN apk update && apk add --update curl && apk add --update nodejs npm && \ 
+    npm -g config set user root && npm install -g create-elm-app && \
     # Install elm
     curl -L -o elm.gz https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz && \
     gunzip elm.gz && \
     chmod +x elm && \
     mv elm /usr/local/bin/
 
-EXPOSE 8000
+EXPOSE 3000
