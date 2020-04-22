@@ -12,11 +12,11 @@ defmodule ApiAppWeb.ImageView do
 
   def render("image.json", %{image: image}) do
     %{
-    id: image.id,
+      id: image.id,
       name: image.name,
       description: image.description,
       image: image.image,
-      category: render_one(image.category, ApiAppWeb.CategoriesView, "categories.json" )
+      category: render_one(image.category, ApiAppWeb.CategoriesView, "categories.json")
       }
   end
 end

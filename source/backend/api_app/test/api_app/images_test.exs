@@ -134,7 +134,7 @@ defmodule ApiApp.ImagesTest do
       image: "some updated image",
       name: "some updated name"
     }
-    @invalid_attrs %{description: nil, image: nil, name: nil}
+    @invalid_attrs %{category_id: nil, description: nil, image: nil, name: nil}
 
     def image_fixture(attrs \\ %{}) do
       {:ok, image} =
