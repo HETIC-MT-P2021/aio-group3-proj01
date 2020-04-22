@@ -10,6 +10,8 @@ services:
     restart: always
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
   phoenix:
     build: .docker/backend/.
     volumes:
@@ -23,7 +25,7 @@ services:
       PGPORT: 5432
       PGHOST: db
     ports:
-      - 4000:4000
+      - "4000:4000"
     depends_on:
       - db
   elm-app:
@@ -32,7 +34,7 @@ services:
       - ./source/frontend/:/frontend
     command: elm-app start
     ports:
-      - 3000:3000
+      - "3000:3000"
     depends_on:
       - phoenix
 volumes:
