@@ -8,9 +8,6 @@ import Html.Attributes as Attr
 import Url exposing (Url)
 import Url.Parser as Parser exposing (Parser, oneOf, s)
 
-
-
-
 -- ROUTING
 
 
@@ -18,6 +15,8 @@ type Route
     = Home
     | Root
     | NewImage
+    | Tags
+    | Categories
 
 
 parser : Parser (Route -> a) a
@@ -25,6 +24,8 @@ parser =
     oneOf
         [ Parser.map Home Parser.top
         , Parser.map NewImage (s "new")
+        , Parser.map Tags (s "tags")
+        , Parser.map Categories (s "categories")
         ]
 
 
@@ -70,5 +71,11 @@ routeToPieces page =
 
         NewImage ->
             [ "new" ]
+
+        Tags ->
+            [ "tags" ]
+
+        Categories ->
+            [ "categories" ]
 
         

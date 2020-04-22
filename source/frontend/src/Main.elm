@@ -8,6 +8,8 @@ import Url exposing (Url)
 import Page exposing (Page)
 import Page.Home as Home
 import Page.NewImage as NewImage
+import Page.Tags as Tags
+import Page.Categories as Categories
 import Page.Blank as Blank
 import Page.NotFound as NotFound
 
@@ -19,6 +21,8 @@ type Model
     | NotFound Session
     | Home Home.Model
     | NewImage NewImage.Model
+    | Categories Categories.Model
+    | Tags Tags.Model
 
 -- MODEL
 
@@ -68,6 +72,12 @@ view model =
         Home home ->
             viewPage Page.Home HomeMsg (Home.view home)
 
+        Tags tags ->
+            viewPage Page.Tags TagsMsg (Tags.view tags)
+
+        Categories categories ->
+            viewPage Page.Categories CategoriesMsg (Categories.view categories)
+
 
 -- UPDATE
 
@@ -77,6 +87,8 @@ type Msg
     | ClickedLink Browser.UrlRequest
     | HomeMsg Home.Msg
     | NewImageMsg NewImage.Msg
+    | CategoriesMsg Categories.Msg
+    | TagsMsg Tags.Msg
 
 toSession : Model -> Session
 toSession page =
@@ -92,6 +104,12 @@ toSession page =
 
         NewImage newImage ->
             NewImage.toSession newImage
+
+        Categories categories ->
+            Categories.toSession categories
+
+        Tags tags ->
+            Tags.toSession tags
 
 
 changeRouteTo : Maybe Route -> Model -> ( Model, Cmd Msg )
@@ -114,6 +132,14 @@ changeRouteTo maybeRoute model =
         Just Route.NewImage ->
             NewImage.init session
                 |> updateWith NewImage NewImageMsg model
+
+        Just Route.Tags ->
+            Tags.init session
+                |> updateWith Tags TagsMsg model
+
+        Just Route.Categories ->
+            Categories.init session
+                |> updateWith Categories CategoriesMsg model
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -156,6 +182,14 @@ update msg model =
             NewImage.update subMsg newImage
                 |> updateWith NewImage NewImageMsg model
 
+        ( TagsMsg subMsg, Tags tags ) ->
+            Tags.update subMsg tags
+                |> updateWith Tags TagsMsg model
+
+        ( CategoriesMsg subMsg, Categories categories ) ->
+            Categories.update subMsg categories
+                |> updateWith Categories CategoriesMsg model
+
         ( _, _ ) ->
             -- Disregard messages that arrived for the wrong page.
             ( model, Cmd.none )
@@ -186,3 +220,9 @@ subscriptions model =
 
         Home home ->
             Sub.map HomeMsg (Home.subscriptions home)
+
+        Categories categories ->
+            Sub.map CategoriesMsg (Categories.subscriptions categories)
+
+        Tags tags ->
+            Sub.map TagsMsg (Tags.subscriptions tags)

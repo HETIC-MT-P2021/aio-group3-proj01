@@ -27,25 +27,15 @@ init session =
 
 view : Model -> { title : String, content : Html Msg }
 view model =
-    { title = "Conduit"
+    { title = "Home"
     , content =
         div [ class "home-page" ]
-            [ viewBanner
-            , div [ class "container page" ]
+            [ div [ class "container page" ]
                 [ div [ class "row" ]
                     [ text "Home pageeee"]
                 ]
             ]
     }
-
-viewBanner : Html msg
-viewBanner =
-    div [ class "banner" ]
-        [ div [ class "container" ]
-            [ h1 [ class "logo-font" ] [ text "conduit" ]
-            , p [] [ text "A place to share your knowledge." ]
-            ]
-        ]
 
 -- UPDATE
 

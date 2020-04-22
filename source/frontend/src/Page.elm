@@ -1,7 +1,7 @@
 module Page exposing (Page(..), view, viewErrors)
 
 import Browser exposing (Document)
-import Html exposing (Html, a, button, div, footer, i, img, li, nav, p, span, text, ul)
+import Html exposing (Html, a, button, div, footer, i, img, li, br, nav, p, span, text, ul)
 import Html.Attributes exposing (class, classList, href, style)
 import Html.Events exposing (onClick)
 
@@ -16,6 +16,8 @@ type Page
     = Other
     | Home
     | NewImage
+    | Tags
+    | Categories
 
 
 {-| Take a page's Html and frames it with a header and footer.
@@ -26,22 +28,24 @@ in the header. (This comes up during slow page transitions.)
 -}
 view : Page -> { title : String, content : Html msg } -> Document msg
 view page { title, content } =
-    { title = title ++ " - Conduit"
+    { title = title ++ " - Gallery."
     , body = viewHeader page :: content :: [ viewFooter ]
     }
 
 
 viewHeader : Page -> Html msg
 viewHeader page =
-    nav [ class "navbar navbar-light" ]
+    nav [ class "navbar navbar-expand-lg navbar-light bg-light" ]
         [ div [ class "container" ]
             [ a [ class "navbar-brand", Route.href Route.Home ]
-                [ text "conduit" ]
+                [ text "Gallery." ]
+            , br[][]
             , ul [ class "nav navbar-nav pull-xs-right" ] <|
                 navbarLink page Route.Home [ text "Home" ]
                     :: viewMenu page
             ]
         ]
+
 
 
 viewMenu : Page -> List (Html msg)
@@ -50,19 +54,20 @@ viewMenu page =
         linkTo =
             navbarLink page
     in
-        [ linkTo Route.Home [ i [ class "ion-compose" ] [], text "\u{00A0}Home" ]
-        , linkTo Route.NewImage [ i [ class "ion-gear-a" ] [], text "\u{00A0}New Image" ]
+        [ linkTo Route.NewImage [ i [ class "ion-gear-a" ] [], text "\u{00A0}New Image" ]
+        , linkTo Route.Categories [ i [ class "ion-gear-a" ] [], text "\u{00A0}Categories" ]
+        , linkTo Route.Tags [ i [ class "ion-gear-a" ] [], text "\u{00A0}Tags" ]
         ]
 
 
 viewFooter : Html msg
 viewFooter =
-    footer []
+    footer [ class "footer"]
         [ div [ class "container" ]
-            [ a [ class "logo-font", href "/" ] [ text "conduit" ]
+            [ a [ class "logo-font", href "/" ] [ text "Gallery." ]
             , span [ class "attribution" ]
                 [ text "An interactive learning project from "
-                , a [ href "https://thinkster.io" ] [ text "Thinkster" ]
+                , a [ href "https://github.com/HETIC-MT-P2021/aio-group3-proj01" ] [ text "HETIC group 3" ]
                 , text ". Code & design licensed under MIT."
                 ]
             ]
@@ -82,6 +87,12 @@ isActive page route =
             True
 
         ( NewImage, Route.NewImage ) ->
+            True
+
+        ( Tags, Route.Tags ) ->
+            True
+
+        ( Categories, Route.Categories ) ->
             True
 
         _ ->
