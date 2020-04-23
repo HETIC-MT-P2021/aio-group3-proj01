@@ -36,7 +36,7 @@ defmodule ApiApp.Images do
   """
   def get_categories!(id), do: Repo.get!(Categories, id)
 
-  @doc """
+@doc """
   Creates a categories.
 
   ## Examples
@@ -298,6 +298,7 @@ defmodule ApiApp.Images do
 
   """
   def delete_image(%Image{} = image) do
+    ImageHandler.delete({image.image, image})
     Repo.delete(image)
   end
 
