@@ -5,7 +5,8 @@ module Page.Home exposing (Model, Msg, init, subscriptions, toSession, update, v
 
 import Browser.Dom as Dom
 import Html exposing (..)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, value, src)
+import Html.Events exposing (onInput)
 
 import Session exposing (Session)
 import Task exposing (Task)
@@ -13,13 +14,28 @@ import Task exposing (Task)
 -- MODEL
 
 type alias Model =
-    { session : Session
+    { 
+        session : Session
+        , images: List Image
+    }
+
+type alias Image =
+    { src : String
+    , description : String
     }
 
 init : Session -> ( Model, Cmd Msg )
 init session =
     (
-    { session = session }
+    { 
+        session = session
+        , images = [
+            {src = "https://thebarkingboutique.com/wp-content/uploads/2019/11/image-1.jpg", description = "This is a cute dog."}
+            , {src = "https://cdn.mos.cms.futurecdn.net/VSy6kJDNq2pSXsCzb6cvYF.jpg", description = "This is a beautiful cat."}
+            , {src = "https://cdn.mos.cms.futurecdn.net/VSy6kJDNq2pSXsCzb6cvYF.jpg", description = "This is a beautiful cat."}
+            , {src = "https://cdn.mos.cms.futurecdn.net/VSy6kJDNq2pSXsCzb6cvYF.jpg", description = "This is a beautiful cat."}
+        ]
+    }
     , Cmd.none
     )
 
@@ -31,16 +47,30 @@ view model =
     , content =
         div [ class "home-page" ]
             [ div [ class "container page" ]
-                [ div [ class "row" ]
-                    [ text "Home pageeee"]
+                [ 
+                    viewImages model.images
                 ]
             ]
     }
 
+viewImages: List Image -> Html Msg
+viewImages images = 
+    div [ class "images-list" ] (List.map viewImage images)
+
+viewImage: Image -> Html Msg
+viewImage image = 
+    div [class "card"] [
+        img [src image.src, class "card-img-top"][]
+        , div [class "card-body"] [
+            p [class "card-text"] [text image.description]
+        ]
+    ]
+
 -- UPDATE
 
 
-type Msg = GotSession Session
+type Msg = 
+    GotSession Session
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
