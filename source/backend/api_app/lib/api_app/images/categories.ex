@@ -5,7 +5,7 @@ defmodule ApiApp.Images.Categories do
 
   schema "category" do
     field :name, :string
-    has_many :image, Image
+    has_many :image, Image, on_replace: :nilify
 
     timestamps()
   end

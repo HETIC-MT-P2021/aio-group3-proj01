@@ -18,5 +18,4 @@ defmodule ApiAppWeb.FallbackController do
     |> put_status(:unprocessable_entity)
     |> render(ApiAppWeb.ChangesetView, "error.json", changeset: changeset)
   end
-
 end

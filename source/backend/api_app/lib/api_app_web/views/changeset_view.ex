@@ -1,6 +1,5 @@
 defmodule ApiAppWeb.ChangesetView do
   use ApiAppWeb, :view
-  alias ApiAppWeb.ResponseWrapper
 
   @doc """
   Traverses and translates changeset errors.

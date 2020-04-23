@@ -3,16 +3,26 @@ defmodule ApiAppWeb.ImageController do
 
   alias ApiApp.Images
   alias ApiApp.Images.Image
+  alias ApiApp.{ImageHandler, Repo}
 
   action_fallback ApiAppWeb.FallbackController
 
   def index(conn, _params) do
-    image = Images.list_image()
+    image =
+      Images.list_image()
+      |> Repo.preload(:category)
+
     render(conn, "index.json", image: image)
   end
 
-  def create(conn, %{"image" => image_params}) do
+  def create(conn, %{ {} => image_params}) do
+    conn
+    |> IO.inspect()
     with {:ok, %Image{} = image} <- Images.create_image(image_params) do
+      image =
+        image
+        |> Repo.preload(:category)
+
       conn
       |> put_status(:created)
       |> put_resp_header("location", Routes.image_path(conn, :show, image))
@@ -21,7 +31,10 @@ defmodule ApiAppWeb.ImageController do
   end
 
   def show(conn, %{"id" => id}) do
-    image = Images.get_image!(id)
+    image =
+      Images.get_image!(id)
+      |> Repo.preload(:category)
+
     render(conn, "show.json", image: image)
   end
 

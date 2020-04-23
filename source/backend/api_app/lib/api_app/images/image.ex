@@ -8,7 +8,7 @@ defmodule ApiApp.Images.Image do
     field :description, :string
     field :image, :string
     field :name, :string
-    belongs_to :category, Categories, foreign_key: :category_id
+    belongs_to :category, Categories, foreign_key: :category_id, on_replace: :nilify
 
     timestamps()
   end
@@ -19,8 +19,8 @@ defmodule ApiApp.Images.Image do
     |> cast(attrs, [:name, :description, :image, :category_id])
     |> validate_required([:name, :description, :image, :category_id])
     |> foreign_key_constraint(:category_id,
-         name: :image_category_id_fkey,
-         message: "Category not found!"
-       )
+      name: :image_category_id_fkey,
+      message: "Category not found!"
+    )
   end
 end

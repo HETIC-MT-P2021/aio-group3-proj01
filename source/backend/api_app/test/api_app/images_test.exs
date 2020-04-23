@@ -127,7 +127,12 @@ defmodule ApiApp.ImagesTest do
   describe "image" do
     alias ApiApp.Images.Image
 
-    @valid_attrs %{category_id: 1, description: "some description", image: "some image", name: "some name"}
+    @valid_attrs %{
+      category_id: 1,
+      description: "some description",
+      image: "some image",
+      name: "some name"
+    }
     @update_attrs %{
       category_id: 1,
       description: "some updated description",

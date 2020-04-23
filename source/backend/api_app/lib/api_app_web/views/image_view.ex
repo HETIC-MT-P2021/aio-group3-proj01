@@ -17,6 +17,6 @@ defmodule ApiAppWeb.ImageView do
       description: image.description,
       image: image.image,
       category: render_one(image.category, ApiAppWeb.CategoriesView, "categories.json")
-      }
+    }
   end
 end

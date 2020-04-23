@@ -5,9 +5,7 @@ defmodule ApiApp.Images do
 
   import Ecto.Query, warn: false
   alias ApiApp.Repo
-
   alias ApiApp.Images.{Categories, Tags, Image}
-
 
   @doc """
   Returns the list of category.
@@ -209,7 +207,6 @@ defmodule ApiApp.Images do
   def list_image do
     Image
     |> Repo.all()
-    |> Repo.preload(:category)
   end
 
   @doc """
@@ -229,9 +226,8 @@ defmodule ApiApp.Images do
   def get_image!(id) do
     Image
     |> Repo.get!(id)
-    |> Repo.preload(:category)
-
   end
+
   @doc """
   Creates a image.
 
@@ -245,7 +241,7 @@ defmodule ApiApp.Images do
 
   """
   def create_image(attrs \\ %{}) do
-  %Image{}
+    %Image{}
     |> Image.changeset(attrs)
     |> Ecto.Changeset.cast_assoc(:category, with: &Categories.changeset/2)
     |> Repo.insert()
