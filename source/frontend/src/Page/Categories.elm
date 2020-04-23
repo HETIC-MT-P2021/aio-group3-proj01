@@ -5,21 +5,37 @@ module Page.Categories exposing (Model, Msg, init, subscriptions, toSession, upd
 
 import Browser.Dom as Dom
 import Html exposing (..)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, href)
 
 import Session exposing (Session)
 import Task exposing (Task)
+import Route exposing (Route)
 
 -- MODEL
 
 type alias Model =
-    { session : Session
+    { 
+        session : Session
+        , categories: List Category
+    }
+
+type alias Category = 
+    {
+        name: String
+        , id: Int
     }
 
 init : Session -> ( Model, Cmd Msg )
 init session =
     (
-    { session = session }
+    { 
+        session = session 
+        , categories = [
+            {name = "Animals", id = 1}
+            , {name = "Sport", id = 2}
+            , {name = "Lifestyle", id = 3}
+        ]
+    }
     , Cmd.none
     )
 
@@ -29,13 +45,23 @@ view : Model -> { title : String, content : Html Msg }
 view model =
     { title = "Categories"
     , content =
-        div [ class "home-page" ]
+        div [ class "categories-page" ]
             [ div [ class "container page" ]
                 [ div [ class "row" ]
-                    [ text "Categories pageeee"]
+                    [ viewCategories model.categories]
                 ]
             ]
     }
+
+viewCategories: List Category -> Html Msg
+viewCategories categories = 
+    div [ class "categories-list"] (List.map viewCategory categories)
+
+viewCategory: Category -> Html Msg
+viewCategory category = 
+    a [Route.href Route.Home, class "link-card"] [
+        text category.name
+    ]
 
 -- UPDATE
 

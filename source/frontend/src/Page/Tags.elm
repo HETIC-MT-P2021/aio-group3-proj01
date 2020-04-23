@@ -5,21 +5,37 @@ module Page.Tags exposing (Model, Msg, init, subscriptions, toSession, update, v
 
 import Browser.Dom as Dom
 import Html exposing (..)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, href)
 
 import Session exposing (Session)
 import Task exposing (Task)
+import Route exposing (Route)
 
 -- MODEL
 
 type alias Model =
-    { session : Session
+    { 
+        session : Session
+        , tags: List Tag
+    }
+
+type alias Tag = 
+    {
+        name: String
+        , id: Int
     }
 
 init : Session -> ( Model, Cmd Msg )
 init session =
     (
-    { session = session }
+    { 
+        session = session 
+        , tags = [
+            {name = "cat", id = 1}
+            , {name = "football", id = 2}
+            , {name = "sun", id = 3}
+        ]
+    }
     , Cmd.none
     )
 
@@ -29,13 +45,23 @@ view : Model -> { title : String, content : Html Msg }
 view model =
     { title = "Tags"
     , content =
-        div [ class "home-page" ]
+        div [ class "tags-page" ]
             [ div [ class "container page" ]
                 [ div [ class "row" ]
-                    [ text "Tags pageeee"]
+                    [ viewTags model.tags]
                 ]
             ]
     }
+
+viewTags: List Tag -> Html Msg
+viewTags tags = 
+    div [ class "tags-list"] (List.map viewTag tags)
+
+viewTag: Tag -> Html Msg
+viewTag tag = 
+    a [Route.href Route.Home, class "link-card"] [
+        text tag.name
+    ]
 
 -- UPDATE
 
