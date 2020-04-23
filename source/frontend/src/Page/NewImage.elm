@@ -64,7 +64,7 @@ viewValidation model =
   if String.length model.category > 1 then
     div [ style "color" "green" ] [ text "OK" ]
   else
-    div [ style "color" "red" ] [ text "You must choose a category!" ]
+    div [ style "color" "red" ] [ text "You must choose a file and a category!" ]
 
 viewInput: String -> String -> String -> String -> String -> (String -> msg) -> Html msg
 viewInput c i t p v toMsg =

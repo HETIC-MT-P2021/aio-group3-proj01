@@ -8,6 +8,9 @@
 [data-elm-hot="true"] {
   height: inherit;
 }
+* {
+  box-sizing: border-box;
+}
 
 body {
   font-family: 'Source Sans Pro', 'Trebuchet MS', 'Lucida Grande', 'Bitstream Vera Sans', 'Helvetica Neue', sans-serif;
@@ -43,4 +46,29 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.categories-page .row {
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tags-page .row {
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.link-card {
+  margin: 30px;
+  background-color: aliceblue;
+  padding: 30px 60px;
+}
+
+.link-card:hover {
+  background-color: rgb(177, 219, 255);
+  text-decoration: none;
 }
