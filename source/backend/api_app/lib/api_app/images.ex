@@ -4,7 +4,7 @@ defmodule ApiApp.Images do
   """
 
   import Ecto.Query, warn: false
-  alias ApiApp.Repo
+  alias ApiApp.{Repo, ImageHandler}
   alias ApiApp.Images.{Categories, Tags, Image}
 
   @doc """
@@ -241,10 +241,20 @@ defmodule ApiApp.Images do
 
   """
   def create_image(attrs \\ %{}) do
-    %Image{}
-    |> Image.changeset(attrs)
-    |> Ecto.Changeset.cast_assoc(:category, with: &Categories.changeset/2)
-    |> Repo.insert()
+    # IO.inspect(attrs, label: "CREATE ATTRS")
+    case %Image{}
+         |> Image.changeset(%{attrs | "image" => attrs["image"].filename})
+         |> Ecto.Changeset.cast_assoc(:category, with: &Categories.changeset/2)
+         |> Repo.insert() do
+      {:ok, image} ->
+        {:ok, _image_name} = ImageHandler.store({attrs["image"], image})
+
+        # image_params = %{image_params | "image" => image_name }
+        {:ok, image}
+
+      error ->
+        error
+    end
   end
 
   @doc """
@@ -260,9 +270,19 @@ defmodule ApiApp.Images do
 
   """
   def update_image(%Image{} = image, attrs) do
-    image
-    |> Image.changeset(attrs)
-    |> Repo.update()
+    case image
+         |> Image.changeset(%{attrs | "image" => attrs["image"].filename})
+         |> Repo.update() do
+      {:ok, updated_image} ->
+        ImageHandler.delete({image.image, image})
+        {:ok, _image_name} = ImageHandler.store({attrs["image"], updated_image})
+
+        # image_params = %{image_params | "image" => image_name }
+        {:ok, updated_image}
+
+      error ->
+        error
+    end
   end
 
   @doc """

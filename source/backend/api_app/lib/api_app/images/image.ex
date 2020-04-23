@@ -16,8 +16,8 @@ defmodule ApiApp.Images.Image do
   @doc false
   def changeset(image, attrs) do
     image
-    |> cast(attrs, [:name, :description, :image, :category_id])
-    |> validate_required([:name, :description, :image, :category_id])
+    |> cast(attrs, [:name, :description, :category_id, :image])
+    |> validate_required([:name, :description, :category_id, :image])
     |> foreign_key_constraint(:category_id,
       name: :image_category_id_fkey,
       message: "Category not found!"

@@ -10,9 +10,9 @@ defmodule ApiApp.ImagesTest do
     @update_attrs %{id: 42, name: "some updated name"}
     @invalid_attrs %{id: nil, name: nil}
 
-    def categories_fixture(attrs \\ %{}) do
+    def categories_fixture() do
       {:ok, categories} =
-        attrs
+        %{name: "Category#{DateTime.utc_now()}"}
         |> Enum.into(@valid_attrs)
         |> Images.create_categories()
 
@@ -128,26 +128,50 @@ defmodule ApiApp.ImagesTest do
     alias ApiApp.Images.Image
 
     @valid_attrs %{
-      category_id: 1,
-      description: "some description",
-      image: "some image",
-      name: "some name"
+      "category_id" => 1,
+      "description" => "some description",
+      "image" => %Plug.Upload{
+        content_type: "image/jpeg",
+        filename: "1528_27.jpg",
+        path: "test/fixtures/thumb.jpg"
+      },
+      "name" => "some name"
     }
     @update_attrs %{
-      category_id: 1,
-      description: "some updated description",
-      image: "some updated image",
-      name: "some updated name"
+      "category_id" => 42,
+      "description" => "some updated description",
+      "image" => %Plug.Upload{
+        content_type: "image/jpeg",
+        filename: "1528_27.jpg",
+        path: "test/fixtures/thumb.jpg"
+      },
+      "name" => "some updated name"
     }
-    @invalid_attrs %{category_id: nil, description: nil, image: nil, name: nil}
+    @invalid_attrs %{
+      "category_id" => 42,
+      "description" => nil,
+      "image" => %Plug.Upload{
+        content_type: "image/jpeg",
+        filename: nil,
+        path: "test/fixtures/thumb.jpg"
+      },
+      "name" => nil
+    }
 
     def image_fixture(attrs \\ %{}) do
+      category = categories_fixture()
+
       {:ok, image} =
         attrs
+        |> Map.merge(%{"category_id" => category.id})
         |> Enum.into(@valid_attrs)
         |> Images.create_image()
 
       image
+    end
+
+    setup do
+      {:ok, %{category: categories_fixture()}}
     end
 
     test "list_image/0 returns all image" do
@@ -161,9 +185,13 @@ defmodule ApiApp.ImagesTest do
     end
 
     test "create_image/1 with valid data creates a image" do
-      assert {:ok, %Image{} = image} = Images.create_image(@valid_attrs)
+      category = categories_fixture()
+
+      assert {:ok, %Image{} = image} =
+               Images.create_image(%{@valid_attrs | "category_id" => category.id})
+
       assert image.description == "some description"
-      assert image.image == "some image"
+      assert image.image == "1528_27.jpg"
       assert image.name == "some name"
     end
 
@@ -173,9 +201,13 @@ defmodule ApiApp.ImagesTest do
 
     test "update_image/2 with valid data updates the image" do
       image = image_fixture()
-      assert {:ok, %Image{} = image} = Images.update_image(image, @update_attrs)
+      category = categories_fixture()
+
+      assert {:ok, %Image{} = image} =
+               Images.update_image(image, %{@update_attrs | "category_id" => category.id})
+
       assert image.description == "some updated description"
-      assert image.image == "some updated image"
+      assert image.image == "1528_27.jpg"
       assert image.name == "some updated name"
     end
 
