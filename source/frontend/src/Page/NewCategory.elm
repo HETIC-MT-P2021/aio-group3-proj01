@@ -130,7 +130,7 @@ postCategory model =
                         [ ( "categories", Encode.object
                             [ ( "name", Encode.string model.name ) ] ) ]
         headers = 
-            [Http.header "content-type" "json"]
+            []
     in
         Http.request
             { url = "http://localhost:4000/api/categories"
