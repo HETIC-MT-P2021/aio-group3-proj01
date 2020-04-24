@@ -17,6 +17,7 @@ type Route
     | NewImage
     | Tags
     | Categories
+    | NewCategory
 
 
 parser : Parser (Route -> a) a
@@ -26,6 +27,7 @@ parser =
         , Parser.map NewImage (s "new")
         , Parser.map Tags (s "tags")
         , Parser.map Categories (s "categories")
+        , Parser.map NewCategory (s "new-category")
         ]
 
 
@@ -77,5 +79,8 @@ routeToPieces page =
 
         Categories ->
             [ "categories" ]
+
+        NewCategory ->
+            [ "new-category" ]
 
         

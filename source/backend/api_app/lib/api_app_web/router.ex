@@ -4,8 +4,8 @@ defmodule ApiAppWeb.Router do
   import Phoenix.LiveView.Router
 
   pipeline :api do
-    plug CORSPlug, origin: "http://localhost:3000"
     plug :accepts, ["json"]
+
   end
 
   scope "/api", ApiAppWeb do
