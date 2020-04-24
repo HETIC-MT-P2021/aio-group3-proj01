@@ -18,6 +18,7 @@ type Page
     | NewImage
     | Tags
     | Categories
+    | NewCategory
 
 
 {-| Take a page's Html and frames it with a header and footer.

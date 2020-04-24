@@ -8,6 +8,7 @@ import Url exposing (Url)
 import Page exposing (Page)
 import Page.Home as Home
 import Page.NewImage as NewImage
+import Page.NewCategory as NewCategory
 import Page.Tags as Tags
 import Page.Categories as Categories
 import Page.Blank as Blank
@@ -23,6 +24,7 @@ type Model
     | NewImage NewImage.Model
     | Categories Categories.Model
     | Tags Tags.Model
+    | NewCategory NewCategory.Model
 
 -- MODEL
 
@@ -78,6 +80,9 @@ view model =
         Categories categories ->
             viewPage Page.Categories CategoriesMsg (Categories.view categories)
 
+        NewCategory category ->
+            viewPage Page.NewCategory NewCategoryMsg (NewCategory.view category)
+
 
 -- UPDATE
 
@@ -89,6 +94,7 @@ type Msg
     | NewImageMsg NewImage.Msg
     | CategoriesMsg Categories.Msg
     | TagsMsg Tags.Msg
+    | NewCategoryMsg NewCategory.Msg
 
 toSession : Model -> Session
 toSession page =
@@ -110,6 +116,9 @@ toSession page =
 
         Tags tags ->
             Tags.toSession tags
+
+        NewCategory category ->
+            NewCategory.toSession category
 
 
 changeRouteTo : Maybe Route -> Model -> ( Model, Cmd Msg )
@@ -140,6 +149,10 @@ changeRouteTo maybeRoute model =
         Just Route.Categories ->
             Categories.init session
                 |> updateWith Categories CategoriesMsg model
+
+        Just Route.NewCategory ->
+            NewCategory.init session
+                |> updateWith NewCategory NewCategoryMsg model
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -190,6 +203,10 @@ update msg model =
             Categories.update subMsg categories
                 |> updateWith Categories CategoriesMsg model
 
+        ( NewCategoryMsg subMsg, NewCategory category ) ->
+            NewCategory.update subMsg category
+                |> updateWith NewCategory NewCategoryMsg model
+
         ( _, _ ) ->
             -- Disregard messages that arrived for the wrong page.
             ( model, Cmd.none )
@@ -226,3 +243,6 @@ subscriptions model =
 
         Tags tags ->
             Sub.map TagsMsg (Tags.subscriptions tags)
+
+        NewCategory category ->
+            Sub.map NewCategoryMsg (NewCategory.subscriptions category)

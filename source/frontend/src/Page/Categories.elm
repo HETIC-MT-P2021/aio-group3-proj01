@@ -49,7 +49,10 @@ view model =
         div [ class "categories-page" ]
             [ div [ class "container page" ]
                 [ div [ class "row" ]
-                    [ viewCategories model.categories]
+                    [ 
+                        a [class "btn btn-primary", Route.href Route.NewCategory] [text "New category"]
+                        , viewCategories model.categories
+                    ]
                 ]
             ]
     }

@@ -48,11 +48,24 @@ h1 {
   align-items: center;
 }
 
+.new-category-page .row {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .categories-page .row {
   margin-top: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.categories-page .btn {
+  position: fixed;
+  left: 30px;
+  top: 90px;
 }
 
 .tags-page .row {
