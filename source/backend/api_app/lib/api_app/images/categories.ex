@@ -1,9 +1,11 @@
 defmodule ApiApp.Images.Categories do
   use Ecto.Schema
   import Ecto.Changeset
+  alias ApiApp.Images.Image
 
   schema "category" do
     field :name, :string
+    has_many :image, Image
 
     timestamps()
   end

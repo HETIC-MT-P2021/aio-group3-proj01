@@ -50,8 +50,13 @@ defmodule ApiAppWeb.CategoriesControllerTest do
   describe "update categories" do
     setup [:create_categories]
 
-    test "renders categories when data is valid", %{conn: conn, categories: %Categories{id: id} = categories} do
-      conn = put(conn, Routes.categories_path(conn, :update, categories), categories: @update_attrs)
+    test "renders categories when data is valid", %{
+      conn: conn,
+      categories: %Categories{id: id} = categories
+    } do
+      conn =
+        put(conn, Routes.categories_path(conn, :update, categories), categories: @update_attrs)
+
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, Routes.categories_path(conn, :show, id))
@@ -63,7 +68,9 @@ defmodule ApiAppWeb.CategoriesControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, categories: categories} do
-      conn = put(conn, Routes.categories_path(conn, :update, categories), categories: @invalid_attrs)
+      conn =
+        put(conn, Routes.categories_path(conn, :update, categories), categories: @invalid_attrs)
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end

@@ -11,7 +11,6 @@ defmodule ApiAppWeb.TagsView do
   end
 
   def render("tags.json", %{tags: tags}) do
-    %{id: tags.id,
-      name: tags.name}
+    %{id: tags.id, name: tags.name}
   end
 end

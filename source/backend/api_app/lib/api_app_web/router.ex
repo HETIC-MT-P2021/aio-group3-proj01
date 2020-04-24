@@ -10,5 +10,6 @@ defmodule ApiAppWeb.Router do
 
     resources "/categories", CategoriesController, except: [:new, :edit]
     resources "/tags", TagsController, except: [:new, :edit]
+    resources "/image", ImageController, except: [:new, :edit]
   end
 end
