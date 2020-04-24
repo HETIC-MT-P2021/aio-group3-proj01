@@ -41,7 +41,8 @@ defmodule ApiApp.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:waffle, "~> 1.0.1"}
+      {:waffle, "~> 1.0.1"},
+      {:cors_plug, "~> 1.5"}
     ]
   end
 

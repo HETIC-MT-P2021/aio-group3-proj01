@@ -6,6 +6,8 @@ module Page.Categories exposing (Model, Msg, init, subscriptions, toSession, upd
 import Browser.Dom as Dom
 import Html exposing (..)
 import Html.Attributes exposing (class, href)
+import Http exposing (Error(..))
+import Json.Decode as Decode exposing (Decoder, int, string)
 
 import Session exposing (Session)
 import Task exposing (Task)
@@ -17,26 +19,25 @@ type alias Model =
     { 
         session : Session
         , categories: List Category
+        , error: Maybe String
     }
 
 type alias Category = 
     {
-        name: String
-        , id: Int
+        id: Int
+        , name: String
     }
 
 init : Session -> ( Model, Cmd Msg )
 init session =
     (
     { 
-        session = session 
+        session = session
+        , error = Nothing
         , categories = [
-            {name = "Animals", id = 1}
-            , {name = "Sport", id = 2}
-            , {name = "Lifestyle", id = 3}
         ]
     }
-    , Cmd.none
+    , getCategories
     )
 
 -- VIEW
@@ -66,13 +67,35 @@ viewCategory category =
 -- UPDATE
 
 
-type Msg = GotSession Session
+type Msg = 
+    GotSession Session
+    | GotCategories (Result Http.Error (List Category))
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         GotSession session ->
             ( { model | session = session }, Cmd.none )
+        
+        GotCategories (Ok categories) ->
+            ( { model
+                | categories = categories
+                , error = Nothing
+              }
+            , Cmd.none
+            )
+
+        GotCategories (Err err) ->
+            let
+                _ =
+                    Debug.log "An error occured" err
+            in
+            ( { model
+                | error = Just <| errorToString err
+                , categories = []
+              }
+            , Cmd.none
+            )
 
 
 -- HTTP
@@ -99,3 +122,37 @@ subscriptions model =
 toSession : Model -> Session
 toSession model =
     model.session
+
+-- HTTP & DECODE
+
+getCategories : Cmd Msg
+getCategories =
+    Http.get
+        { url = "http://localhost:4000/api/categories"
+        , expect = Http.expectJson GotCategories (Decode.field "data" (Decode.list decodeCategory))
+        }
+
+decodeCategory : Decoder Category
+decodeCategory =
+   Decode.map2 Category
+     (Decode.field "id" Decode.int)
+     (Decode.field "name" Decode.string)
+
+
+errorToString : Http.Error -> String
+errorToString error =
+    case error of
+        BadUrl url ->
+            "Bad url: " ++ url
+
+        Timeout ->
+            "Request timed out."
+
+        NetworkError ->
+            "Network error. Are you online?"
+
+        BadStatus status_code ->
+            "HTTP error " ++ String.fromInt status_code
+
+        BadBody body ->
+            "Unable to parse response body: " ++ body
