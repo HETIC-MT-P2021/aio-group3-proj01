@@ -42,7 +42,12 @@ defmodule ApiApp.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:waffle, "~> 1.0.1"},
-      {:cors_plug, "~> 1.5"}
+      {:cors_plug, "~> 1.5"},
+      {:phoenix_live_dashboard, "~> 0.1"},
+      {:phoenix_live_view, "~> 0.12"},
+      {:floki, ">= 0.0.0", only: :test},
+      {:telemetry_poller, "~> 0.4"},
+      {:telemetry_metrics, "~> 0.4"}
     ]
   end
 

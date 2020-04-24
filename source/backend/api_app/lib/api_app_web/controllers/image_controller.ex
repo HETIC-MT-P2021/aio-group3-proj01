@@ -3,7 +3,7 @@ defmodule ApiAppWeb.ImageController do
 
   alias ApiApp.Images
   alias ApiApp.Images.Image
-  alias ApiApp.{ImageHandler, Repo}
+  alias ApiApp.Repo
 
   action_fallback ApiAppWeb.FallbackController
 
