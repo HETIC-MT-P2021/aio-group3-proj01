@@ -26,6 +26,12 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# config the CORS plus
+config :cors_plug,
+  origin: ["http://localhost:3000"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allow_headers: ["content-type"]
+
 # Use waffle for image handling
 config :waffle,
   storage: Waffle.Storage.Local,

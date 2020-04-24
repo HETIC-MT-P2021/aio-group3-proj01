@@ -4,14 +4,15 @@ defmodule ApiAppWeb.Router do
   import Phoenix.LiveView.Router
 
   pipeline :api do
-    plug CORSPlug, origin: "http://localhost:3000"
     plug :accepts, ["json"]
+
   end
 
   scope "/api", ApiAppWeb do
     pipe_through :api
     
     resources "/categories", CategoriesController, except: [:new, :edit]
+    options "/categories", CategoriesController, :option
     resources "/tags", TagsController, except: [:new, :edit]
     resources "/image", ImageController, except: [:new, :edit]
   end
