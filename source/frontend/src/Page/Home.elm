@@ -71,25 +71,27 @@ view model =
             nb_image = List.length model.images
             
         in
-        div [ class "images-list" ]
-            [ if nb_image == 0 then
-                text "Loading…"
+            div [class "home-page"] [
+                div [ class "container page" ] [
+                    div [ class "images-list" ] [ 
+                        if nb_image == 0 then
+                            text "Loading…"
 
-            else
-                case model.error of
-                    Nothing ->
-                        div []
-                            [ h1 [] [ text (String.fromInt nb_image ++ " images") ]
-                            , List.take 100 model.images
-                                |> List.map viewImage
-                                |> div []
-                            ]
+                        else
+                            case model.error of
+                                Nothing ->
+                                    div []
+                                        [ List.take 100 model.images
+                                            |> List.map viewImage
+                                            |> div []
+                                        ]
 
-                    Just error ->
-                        div [ ]
-                            [ h1 [] [ text error ] ]
+                                Just error ->
+                                    div [ ]
+                                        [ h1 [] [ text error ] ]
+                        ]
+                ]
             ]
-
     }
 
 viewImage : Image -> Html Msg
