@@ -18,7 +18,8 @@ import Task exposing (Task)
 type alias Model =
     { 
         session : Session,
-        name: String
+        name: String,
+        received: String
     }
 
 type alias Category = 
@@ -32,7 +33,8 @@ init session =
     (
     { 
         session = session
-        , name = ""
+        , name = "",
+        received = ""
     }
     , Cmd.none
     )
@@ -62,10 +64,10 @@ viewForm model =
 
 viewValidation : Model -> Html msg
 viewValidation model =
-  if String.length model.name > 1 then
-    div [ style "color" "green" ] [ text "OK" ]
-  else
-    div [ style "color" "red" ] [ text "Name length must be > 2" ]
+  if String.length model.received > 1 then
+    div [ style "color" "green" ] [ text "Category created" ]
+  else 
+    div [] []
 
 viewInput: String -> String -> String -> String -> String -> (String -> msg) -> Html msg
 viewInput c i t p v toMsg =
@@ -89,7 +91,7 @@ update msg model =
             ({model | name = name}, Cmd.none)
         
         GotCategory category ->
-            (model, Cmd.none)
+            ({model | received = "ok"}, Cmd.none)
         
         CreateCategory ->
             (model, postCategory model)

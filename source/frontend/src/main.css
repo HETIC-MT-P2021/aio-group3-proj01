@@ -30,7 +30,7 @@ h1 {
   transform: translateX(-50%);
 }
 
-.images-list {
+.images-list div {
   margin-top: 30px;
   display: flex;
   flex-wrap: wrap;
@@ -55,10 +55,11 @@ h1 {
   align-items: center;
 }
 
-.categories-page .row {
+.categories-page .row .categories-list{
   margin-top: 60px;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   align-items: center;
 }
 
