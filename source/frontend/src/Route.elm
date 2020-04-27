@@ -6,7 +6,7 @@ import Html exposing (Attribute)
 import Html.Attributes as Attr
 
 import Url exposing (Url)
-import Url.Parser as Parser exposing (Parser, oneOf, s)
+import Url.Parser as Parser exposing (Parser, oneOf, s, (</>), int)
 
 -- ROUTING
 
@@ -18,6 +18,7 @@ type Route
     | Tags
     | Categories
     | NewCategory
+    | ImagesByCategory Int
 
 
 parser : Parser (Route -> a) a
@@ -28,6 +29,7 @@ parser =
         , Parser.map Tags (s "tags")
         , Parser.map Categories (s "categories")
         , Parser.map NewCategory (s "new-category")
+        , Parser.map ImagesByCategory (s "category" </> int)
         ]
 
 
@@ -82,5 +84,8 @@ routeToPieces page =
 
         NewCategory ->
             [ "new-category" ]
+        
+        ImagesByCategory id ->
+            [ "category", String.fromInt id]
 
         
