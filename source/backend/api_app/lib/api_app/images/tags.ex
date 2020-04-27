@@ -1,9 +1,16 @@
 defmodule ApiApp.Images.Tags do
   use Ecto.Schema
   import Ecto.Changeset
+  alias ApiApp.Images.{Image, TagsImages}
 
   schema "tag" do
     field :name, :string, null: false
+
+    many_to_many :image, Image,
+      join_through: TagsImages,
+      on_replace: :delete,
+      join_keys: [image_id: :id, tag_id: :id]
+
     timestamps(usec: false)
   end
 

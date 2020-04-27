@@ -13,6 +13,7 @@ defmodule ApiAppWeb.Router do
     resources "/categories", CategoriesController, except: [:new, :edit]
     get "/category/images/:id", CategoriesController, :show_images
     resources "/tags", TagsController, except: [:new, :edit]
+    get "/tag/images/:id", TagsController, :show_images_by_tags
     resources "/image", ImageController, except: [:new, :edit]
   end
 

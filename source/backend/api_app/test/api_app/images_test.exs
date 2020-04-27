@@ -135,6 +135,7 @@ defmodule ApiApp.ImagesTest do
         filename: "1528_27.jpg",
         path: "test/fixtures/thumb.jpg"
       },
+      "tags" => ["cat", "vacation"],
       "name" => "some name"
     }
     @update_attrs %{
@@ -145,6 +146,7 @@ defmodule ApiApp.ImagesTest do
         filename: "1528_27.jpg",
         path: "test/fixtures/thumb.jpg"
       },
+      "tags" => ["cat", "vacation"],
       "name" => "some updated name"
     }
     @invalid_attrs %{
@@ -155,6 +157,7 @@ defmodule ApiApp.ImagesTest do
         filename: nil,
         path: "test/fixtures/thumb.jpg"
       },
+      "tags" => [],
       "name" => nil
     }
 
@@ -165,7 +168,7 @@ defmodule ApiApp.ImagesTest do
         attrs
         |> Map.merge(%{"category_id" => category.id})
         |> Enum.into(@valid_attrs)
-        |> Images.create_image()
+        |> Images.create_image_test()
 
       image
     end
@@ -188,7 +191,7 @@ defmodule ApiApp.ImagesTest do
       category = categories_fixture()
 
       assert {:ok, %Image{} = image} =
-               Images.create_image(%{@valid_attrs | "category_id" => category.id})
+               Images.create_image_test(%{@valid_attrs | "category_id" => category.id})
 
       assert image.description == "some description"
       assert image.image == "1528_27.jpg"
@@ -196,7 +199,7 @@ defmodule ApiApp.ImagesTest do
     end
 
     test "create_image/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Images.create_image(@invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Images.create_image_test(@invalid_attrs)
     end
 
     test "update_image/2 with valid data updates the image" do

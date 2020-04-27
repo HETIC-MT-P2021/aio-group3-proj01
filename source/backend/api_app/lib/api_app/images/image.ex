@@ -2,13 +2,18 @@ defmodule ApiApp.Images.Image do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ApiApp.Images.Categories
+  alias ApiApp.Images.{Categories, Tags}
 
   schema "image" do
     field :description, :string
     field :image, :string
     field :name, :string
     belongs_to :category, Categories, foreign_key: :category_id, on_replace: :nilify
+
+    many_to_many :tags, Tags,
+      join_through: TagsImages,
+      on_replace: :delete,
+      join_keys: [image_id: :id, tag_id: :id]
 
     timestamps()
   end
