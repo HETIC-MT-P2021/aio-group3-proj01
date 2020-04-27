@@ -17,6 +17,8 @@ body {
   margin: 0;
   text-align: center;
   color: #293c4b;
+  width: 100vw;
+  height: 100vh;
 }
 
 h1 {
@@ -99,4 +101,35 @@ h1 {
 .link-card:hover {
   background-color: rgb(177, 219, 255);
   text-decoration: none;
+}
+
+.image-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+}
+
+.image-page .image-full {
+  width: 80vw; 
+  height: 80vh;
+}
+
+.image-full img {
+  display: block;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.image-full {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  max-height: 60vh;
+}
+
+.card-details {
+  text-align: left;
+  padding-left: 30px;
+  padding-top: 20px;
 }
