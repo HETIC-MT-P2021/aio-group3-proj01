@@ -133,3 +133,17 @@ h1 {
   padding-left: 30px;
   padding-top: 20px;
 }
+
+.buttons {
+  position: fixed;
+  left: 30px;
+  top: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.buttons .btn {
+  margin: 10px;
+}

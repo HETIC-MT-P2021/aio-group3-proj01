@@ -4,12 +4,14 @@ module Page.ImageById exposing (Model, Msg, init, subscriptions, toSession, upda
 -}
 
 import Browser.Dom as Dom
+import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (class, value, src)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onInput, onClick)
 
 import Session exposing (Session)
 import Task exposing (Task)
+import Route exposing (Route)
 
 import Browser exposing (sandbox)
 import Http exposing (Error(..))
@@ -41,8 +43,10 @@ decodeImage =
      (Decode.field "description" Decode.string)
      (Decode.field "image_original_url" Decode.string)
 
-type Msg
-    = GotImages (Result Http.Error (Image))
+type Msg = 
+    GotImages (Result Http.Error (Image))
+    | DeleteMsg Int
+    | DeletedMsg (Result Http.Error ())
 
 init : Session -> Int -> ( Model, Cmd Msg )
 init session id =
@@ -70,6 +74,10 @@ view model =
     { title = "Image by id"
     , content =      
             div [class "container page"] [  
+                div [class "buttons"] [
+                    a [class "btn btn-primary", Route.href Route.Home][text "Edit"]
+                    , button[class "btn btn-danger", onClick (DeleteMsg model.id)][text "Delete"]
+                ],
                 case model.error of
                     Nothing ->
                         case model.image of
@@ -119,6 +127,13 @@ update msg model =
               }
             , Cmd.none
             )
+        
+        DeleteMsg id ->
+            (model, deleteImage id)
+
+        DeletedMsg _ ->
+            (model, Nav.reload)
+
 
 
 -- HTTP
@@ -150,6 +165,20 @@ errorToString error =
 
 
 
+-- HTTP 
+
+deleteImage: Int -> Cmd Msg
+deleteImage id = 
+    Http.request
+        { method = "DELETE"
+        , headers = []
+        , url = "http://localhost:4000/api/image/" ++ String.fromInt id
+        , body = Http.emptyBody
+        , expect = Http.expectWhatever DeletedMsg
+        , timeout = Nothing
+        , tracker = Nothing
+        }
+
 -- SUBSCRIPTIONS
 
 subscriptions : Model -> Sub Msg
@@ -161,3 +190,4 @@ subscriptions model =
 toSession : Model -> Session
 toSession model =
     model.session
+
