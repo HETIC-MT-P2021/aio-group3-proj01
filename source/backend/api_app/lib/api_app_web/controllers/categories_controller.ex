@@ -1,7 +1,6 @@
 defmodule ApiAppWeb.CategoriesController do
   use ApiAppWeb, :controller
-  import Ecto.Query
-  alias ApiApp.{Images, Repo}
+  alias ApiApp.Images
   alias ApiApp.Images.Categories
 
   action_fallback ApiAppWeb.FallbackController
@@ -27,19 +26,8 @@ defmodule ApiAppWeb.CategoriesController do
 
   def show_images(conn, %{"id" => id}) do
     categories = Images.get_categories!(id)
-    {int_id, _} = Integer.parse(id)
-
-    images =
-      Repo.all(
-        from i in "image",
-          where: i.category_id == ^int_id,
-          select: %{
-            id: i.id,
-            name: i.name,
-            url: i.image,
-            description: i.description
-          }
-      )
+    {category_id, _} = Integer.parse(id)
+    images = Images.get_images_by_category(category_id)
 
     render(conn, "images_by_categories.json", %{categories: categories, images: images})
   end

@@ -9,7 +9,11 @@ defmodule ApiApp.Images.Image do
     field :image, :string
     field :name, :string
     belongs_to :category, Categories, foreign_key: :category_id, on_replace: :nilify
-    many_to_many :tags, Tags, join_through: TagsImages, on_replace: :delete
+
+    many_to_many :tags, Tags,
+      join_through: TagsImages,
+      on_replace: :delete,
+      join_keys: [image_id: :id, tag_id: :id]
 
     timestamps()
   end
@@ -23,6 +27,5 @@ defmodule ApiApp.Images.Image do
       name: :image_category_id_fkey,
       message: "Category not found!"
     )
-    |> put_assoc(:tag, Tags)
   end
 end

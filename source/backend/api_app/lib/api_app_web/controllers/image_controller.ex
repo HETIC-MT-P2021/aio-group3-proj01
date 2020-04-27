@@ -20,6 +20,7 @@ defmodule ApiAppWeb.ImageController do
       image =
         image
         |> Repo.preload(:category)
+        |> Repo.preload(:tags)
 
       conn
       |> put_status(:created)
@@ -32,6 +33,7 @@ defmodule ApiAppWeb.ImageController do
     image =
       Images.get_image!(id)
       |> Repo.preload(:category)
+      |> Repo.preload(:tags)
 
     render(conn, "show.json", image: image)
   end

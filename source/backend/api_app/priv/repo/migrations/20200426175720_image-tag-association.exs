@@ -12,8 +12,6 @@ defmodule ApiApp.Repo.Migrations.ImageTagAssociation do
     create(index(:tags_images, [:image_id]))
     create(index(:tags_images, [:tag_id]))
 
-    create(
-      unique_index(:tags_images,  [:image_id, :tag_id], name: :image_id_tag_id_unique_index)
-    )
+    create(unique_index(:tags_images, [:image_id, :tag_id], name: :image_id_tag_id_unique_index))
   end
 end

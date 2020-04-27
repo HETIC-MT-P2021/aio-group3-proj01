@@ -5,7 +5,11 @@ defmodule ApiApp.Images.Tags do
 
   schema "tag" do
     field :name, :string, null: false
-    many_to_many :image, Image, join_through: TagsImages, on_replace: :delete
+
+    many_to_many :image, Image,
+      join_through: TagsImages,
+      on_replace: :delete,
+      join_keys: [image_id: :id, tag_id: :id]
 
     timestamps(usec: false)
   end
@@ -17,6 +21,5 @@ defmodule ApiApp.Images.Tags do
     |> validate_required([:name])
     |> unique_constraint(:name)
     |> validate_length(:name, max: 60, count: :codepoints)
-    |> put_assoc(:image, Image)
   end
 end

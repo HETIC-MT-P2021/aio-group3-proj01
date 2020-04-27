@@ -25,6 +25,13 @@ defmodule ApiAppWeb.TagsController do
     render(conn, "show.json", tags: tags)
   end
 
+  def show_images_by_tags(conn, %{"id" => id}) do
+    tags = Images.get_tags!(id)
+    {tag_id, _} = Integer.parse(id)
+    images = Images.get_image_by_tags(tag_id)
+    render(conn, "images_by_tags.json", tags: tags, images: images)
+  end
+
   def update(conn, %{"id" => id, "tags" => tags_params}) do
     tags = Images.get_tags!(id)
 

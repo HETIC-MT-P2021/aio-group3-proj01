@@ -195,6 +195,20 @@ defmodule ApiApp.Images do
     Tags.changeset(tags, %{})
   end
 
+  def find_and_create_tags(tags) do
+    existing_tags = Repo.all(from t in Tags, where: t.name in ^tags)
+    new_tag_names = tags -- Enum.map(existing_tags, fn tag -> tag.name end)
+
+    new_tags =
+      new_tag_names
+      |> Enum.map(fn tag_name ->
+        {:ok, tag} = create_tags(%{name: tag_name})
+        tag
+      end)
+
+    existing_tags ++ new_tags
+  end
+
   @doc """
   Returns the list of image.
 
@@ -229,7 +243,7 @@ defmodule ApiApp.Images do
   end
 
   @doc """
-  Creates a image.
+  Creates a image and associates the category passed in the object, uses find_and_create_tags for tags object.
 
   ## Examples
 
@@ -245,11 +259,37 @@ defmodule ApiApp.Images do
     case %Image{}
          |> Image.changeset(%{attrs | "image" => attrs["image"].filename})
          |> Ecto.Changeset.cast_assoc(:category, with: &Categories.changeset/2)
+         # |> Ecto.Changeset.put_assoc(:tags, tags)
+         |> Repo.insert() do
+      {:ok, image} ->
+        if attrs["tags"] do
+          tags = find_and_create_tags(attrs["tags"])
+
+          tags
+          |> Enum.each(fn tag ->
+            TagsImages.changeset(%TagsImages{}, %{image_id: image.id, tag_id: tag.id})
+            |> Repo.insert(on_conflict: :nothing)
+          end)
+        end
+
+        {:ok, _image_name} = ImageHandler.store({attrs["image"], image})
+        {:ok, image}
+
+      error ->
+        error
+    end
+  end
+
+  def create_image_test(attrs \\ %{}) do
+    # IO.inspect(attrs, label: "CREATE ATTRS")
+    tags = find_and_create_tags(attrs["tags"])
+
+    case %Image{}
+         |> Image.changeset(%{attrs | "image" => attrs["image"].filename})
+         |> Ecto.Changeset.cast_assoc(:category, with: &Categories.changeset/2)
          |> Repo.insert() do
       {:ok, image} ->
         {:ok, _image_name} = ImageHandler.store({attrs["image"], image})
-
-        # image_params = %{image_params | "image" => image_name }
         {:ok, image}
 
       error ->
@@ -274,6 +314,19 @@ defmodule ApiApp.Images do
          |> Image.changeset(%{attrs | "image" => attrs["image"].filename})
          |> Repo.update() do
       {:ok, updated_image} ->
+        if attrs["tags"] do
+          tags = find_and_create_tags(attrs["tags"])
+
+          tags
+          |> Enum.each(fn updated_tags ->
+            TagsImages.changeset(%TagsImages{}, %{
+              image_id: updated_image.id,
+              tag_id: updated_tags.id
+            })
+            |> Repo.insert(on_conflict: :nothing)
+          end)
+        end
+
         ImageHandler.delete({image.image, image})
         {:ok, _image_name} = ImageHandler.store({attrs["image"], updated_image})
 
@@ -313,5 +366,53 @@ defmodule ApiApp.Images do
   """
   def change_image(%Image{} = image) do
     Image.changeset(image, %{})
+  end
+
+  @doc """
+    Returns a list of images fetched by a specific category
+  """
+  def get_images_by_category(id) do
+    images =
+      Repo.all(
+        from i in "image",
+          where: i.category_id == ^id,
+          select: %{
+            id: i.id,
+            name: i.name,
+            image_original_url: i.image,
+            description: i.description
+          }
+      )
+
+    images
+  end
+
+  @doc """
+    Returns a list of images fetched by a specific tag
+  """
+  def get_image_by_tags(id) do
+    images_id =
+      Repo.all(
+        from ti in "tags_images",
+          where: ti.tag_id == ^id,
+          select: ti.image_id
+      )
+
+    images =
+      images_id
+      |> Enum.map(fn single_image_id ->
+        Repo.all(
+          from i in "image",
+            where: i.id == ^single_image_id,
+            select: %{
+              name: i.name,
+              description: i.description,
+              image_original_url: i.image,
+              category_id: i.category_id
+            }
+        )
+      end)
+
+    images
   end
 end
