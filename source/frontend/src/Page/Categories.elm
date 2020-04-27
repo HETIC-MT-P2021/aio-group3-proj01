@@ -4,8 +4,11 @@ module Page.Categories exposing (Model, Msg, init, subscriptions, toSession, upd
 -}
 
 import Browser.Dom as Dom
+import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (class, href)
+import Html.Events exposing (onClick)
+
 import Http exposing (Error(..))
 import Json.Decode as Decode exposing (Decoder, int, string)
 
@@ -63,8 +66,9 @@ viewCategories categories =
 
 viewCategory: Category -> Html Msg
 viewCategory category = 
-    a [Route.href (Route.ImagesByCategory category.id), class "link-card"] [
-        text category.name
+    div [class "link-card"] [
+        a [Route.href (Route.ImagesByCategory category.id)] [text category.name]
+        , i [class "fas fa-times", onClick (DeleteCategoryMsg category.id)][]
     ]
 
 -- UPDATE
@@ -73,6 +77,8 @@ viewCategory category =
 type Msg = 
     GotSession Session
     | GotCategories (Result Http.Error (List Category))
+    | DeleteCategoryMsg Int
+    | DeletedMsg (Result Http.Error ())
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -99,6 +105,15 @@ update msg model =
               }
             , Cmd.none
             )
+        
+        DeleteCategoryMsg id ->
+            (model, deleteCategory id)
+        
+        DeletedMsg (Err err)->
+            (model, Cmd.none)
+
+        DeletedMsg (Ok delete)->
+            (model, Nav.reload)
 
 
 -- HTTP
@@ -133,6 +148,18 @@ getCategories =
     Http.get
         { url = "http://localhost:4000/api/categories"
         , expect = Http.expectJson GotCategories (Decode.field "data" (Decode.list decodeCategory))
+        }
+
+deleteCategory: Int -> Cmd Msg
+deleteCategory id = 
+    Http.request
+        { method = "DELETE"
+        , headers = []
+        , url = "http://localhost:4000/api/categories/" ++ (String.fromInt id)
+        , body = Http.emptyBody
+        , expect = Http.expectWhatever DeletedMsg
+        , timeout = Nothing
+        , tracker = Nothing
         }
 
 decodeCategory : Decoder Category

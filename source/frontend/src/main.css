@@ -80,6 +80,20 @@ h1 {
   margin: 30px;
   background-color: aliceblue;
   padding: 30px 60px;
+  position: relative;
+}
+
+.link-card i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  display: none;
+}
+
+.link-card:hover i {
+  display: block;
 }
 
 .link-card:hover {
