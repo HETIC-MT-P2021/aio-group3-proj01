@@ -1,4 +1,4 @@
-module Page.Home exposing (Model, Msg, init, subscriptions, toSession, update, view)
+module Page.ImageById exposing (Model, Msg, init, subscriptions, toSession, update, view)
 
 {-| The homepage. You can get here via either the / or /#/ routes.
 -}
@@ -9,7 +9,6 @@ import Html.Attributes exposing (class, value, src)
 import Html.Events exposing (onInput)
 
 import Session exposing (Session)
-import Route exposing (Route)
 import Task exposing (Task)
 
 import Browser exposing (sandbox)
@@ -21,8 +20,9 @@ import Json.Decode as Decode exposing (Decoder, int, string, field)
 type alias Model =
     { 
         session : Session
-        , images: List Image
+        , image: Maybe Image
         , error : Maybe String
+        , id: Int
     }
 
 type alias Image =
@@ -42,23 +42,24 @@ decodeImage =
      (Decode.field "image_original_url" Decode.string)
 
 type Msg
-    = GotImages (Result Http.Error (List Image))
+    = GotImages (Result Http.Error (Image))
 
-init : Session -> ( Model, Cmd Msg )
-init session =
+init : Session -> Int -> ( Model, Cmd Msg )
+init session id =
     (
     { 
         session = session
-        , images = []
+        , image = Nothing
         , error = Nothing
+        , id = id
     }
-    , getImages
+    , getImages id
     )
-getImages : Cmd Msg
-getImages =
+getImages : Int -> Cmd Msg
+getImages id =
     Http.get
-        { url = "http://localhost:4000/api/image"
-        , expect = Http.expectJson GotImages (Decode.field "data" (Decode.list decodeImage))
+        { url = "http://localhost:4000/api/image/" ++ (String.fromInt id)
+        , expect = Http.expectJson GotImages (Decode.field "data" (decodeImage))
         }
 
 
@@ -66,41 +67,31 @@ getImages =
 
 view : Model -> { title : String, content : Html Msg }
 view model =
-    { title = "Home"
+    { title = "Image by id"
     , content =      
-        let
-            nb_image = List.length model.images
-            
-        in
-            div [class "home-page"] [
-                div [ class "container page" ] [
-                    div [ class "images-list" ] [ 
-                        if nb_image == 0 then
-                            text "Loading…"
+            div [class "container page"] [  
+                case model.error of
+                    Nothing ->
+                        case model.image of
+                            Just image ->
+                                viewImage image
 
-                        else
-                            case model.error of
-                                Nothing ->
-                                    div []
-                                        [ List.take 100 model.images
-                                            |> List.map viewImage
-                                            |> div []
-                                        ]
+                            Nothing ->
+                                div [][text "no image found"]
 
-                                Just error ->
-                                    div [ ]
-                                        [ h1 [] [ text error ] ]
-                        ]
-                ]
+                    Just error ->
+                        div [ ]
+                            [ h1 [] [ text error ] ]
             ]
     }
 
 viewImage : Image -> Html Msg
 viewImage image =
-    div [class "card"] [
-        img [src ("http://localhost:4000" ++ image.image_original_url), class "card-img-top"][]
-        , a [class "card-body", Route.href (Route.ImageById image.id)] [
-            p [class "card-text"] [text image.description]
+    div [class "image-full"] [
+        img [src ("http://localhost:4000" ++ image.image_original_url)][]
+        , div [class "card-details"] [
+            h1 [class "name"] [text image.name]
+            , p [class "card-text"] [text image.description]
         ]
     ]
 
@@ -109,9 +100,9 @@ viewImage image =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GotImages (Ok images) ->
+        GotImages (Ok image) ->
             ( { model
-                | images = images
+                | image = Just image
                 , error = Nothing
               }
             , Cmd.none
@@ -124,7 +115,7 @@ update msg model =
             in
             ( { model
                 | error = Just <| errorToString err
-                , images = []
+                , image = Nothing
               }
             , Cmd.none
             )

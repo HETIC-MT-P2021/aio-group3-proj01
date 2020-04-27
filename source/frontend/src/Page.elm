@@ -20,6 +20,7 @@ type Page
     | Categories
     | NewCategory
     | ImagesByCategory
+    | ImageById
 
 
 {-| Take a page's Html and frames it with a header and footer.

@@ -10,6 +10,7 @@ import Page.Home as Home
 import Page.NewImage as NewImage
 import Page.NewCategory as NewCategory
 import Page.ImagesByCategory as ImagesByCategory
+import Page.ImageById as ImageById
 import Page.Tags as Tags
 import Page.Categories as Categories
 import Page.Blank as Blank
@@ -27,6 +28,7 @@ type Model
     | Tags Tags.Model
     | NewCategory NewCategory.Model
     | ImagesByCategory Int ImagesByCategory.Model
+    | ImageById Int ImageById.Model
 
 -- MODEL
 
@@ -85,8 +87,11 @@ view model =
         NewCategory category ->
             viewPage Page.NewCategory NewCategoryMsg (NewCategory.view category)
 
-        ImagesByCategory id category ->
+        ImagesByCategory _ category ->
             viewPage Page.ImagesByCategory ImagesByCategoryMsg (ImagesByCategory.view category)
+
+        ImageById _ id ->
+            viewPage Page.ImageById ImageByIdMsg (ImageById.view id)
 
 
 -- UPDATE
@@ -101,6 +106,7 @@ type Msg
     | TagsMsg Tags.Msg
     | NewCategoryMsg NewCategory.Msg
     | ImagesByCategoryMsg ImagesByCategory.Msg
+    | ImageByIdMsg ImageById.Msg
 
 toSession : Model -> Session
 toSession page =
@@ -128,6 +134,9 @@ toSession page =
 
         ImagesByCategory _ category ->
             ImagesByCategory.toSession category
+
+        ImageById _ id ->
+            ImageById.toSession id
 
 
 changeRouteTo : Maybe Route -> Model -> ( Model, Cmd Msg )
@@ -166,6 +175,10 @@ changeRouteTo maybeRoute model =
         Just (Route.ImagesByCategory id) ->
             ImagesByCategory.init session id
                 |> updateWith (ImagesByCategory id) ImagesByCategoryMsg model
+
+        Just (Route.ImageById id) ->
+            ImageById.init session id
+                |> updateWith (ImageById id) ImageByIdMsg model
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -224,6 +237,10 @@ update msg model =
             ImagesByCategory.update subMsg category
                 |> updateWith (ImagesByCategory id) ImagesByCategoryMsg model
 
+        ( ImageByIdMsg subMsg, ImageById id category ) ->
+            ImageById.update subMsg category
+                |> updateWith (ImageById id) ImageByIdMsg model
+
         ( _, _ ) ->
             -- Disregard messages that arrived for the wrong page.
             ( model, Cmd.none )
@@ -266,3 +283,6 @@ subscriptions model =
 
         ImagesByCategory _ category ->
             Sub.map ImagesByCategoryMsg (ImagesByCategory.subscriptions category)
+
+        ImageById _ id ->
+            Sub.map ImageByIdMsg (ImageById.subscriptions id)
