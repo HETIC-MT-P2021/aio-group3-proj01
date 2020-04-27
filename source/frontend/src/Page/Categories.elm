@@ -63,7 +63,7 @@ viewCategories categories =
 
 viewCategory: Category -> Html Msg
 viewCategory category = 
-    a [Route.href Route.Home, class "link-card"] [
+    a [Route.href (Route.ImagesByCategory category.id), class "link-card"] [
         text category.name
     ]
 

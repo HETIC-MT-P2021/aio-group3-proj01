@@ -9,6 +9,7 @@ import Page exposing (Page)
 import Page.Home as Home
 import Page.NewImage as NewImage
 import Page.NewCategory as NewCategory
+import Page.ImagesByCategory as ImagesByCategory
 import Page.Tags as Tags
 import Page.Categories as Categories
 import Page.Blank as Blank
@@ -25,6 +26,7 @@ type Model
     | Categories Categories.Model
     | Tags Tags.Model
     | NewCategory NewCategory.Model
+    | ImagesByCategory Int ImagesByCategory.Model
 
 -- MODEL
 
@@ -83,6 +85,9 @@ view model =
         NewCategory category ->
             viewPage Page.NewCategory NewCategoryMsg (NewCategory.view category)
 
+        ImagesByCategory id category ->
+            viewPage Page.ImagesByCategory ImagesByCategoryMsg (ImagesByCategory.view category)
+
 
 -- UPDATE
 
@@ -95,6 +100,7 @@ type Msg
     | CategoriesMsg Categories.Msg
     | TagsMsg Tags.Msg
     | NewCategoryMsg NewCategory.Msg
+    | ImagesByCategoryMsg ImagesByCategory.Msg
 
 toSession : Model -> Session
 toSession page =
@@ -119,6 +125,9 @@ toSession page =
 
         NewCategory category ->
             NewCategory.toSession category
+
+        ImagesByCategory _ category ->
+            ImagesByCategory.toSession category
 
 
 changeRouteTo : Maybe Route -> Model -> ( Model, Cmd Msg )
@@ -153,6 +162,10 @@ changeRouteTo maybeRoute model =
         Just Route.NewCategory ->
             NewCategory.init session
                 |> updateWith NewCategory NewCategoryMsg model
+
+        Just (Route.ImagesByCategory id) ->
+            ImagesByCategory.init session id
+                |> updateWith (ImagesByCategory id) ImagesByCategoryMsg model
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -207,6 +220,10 @@ update msg model =
             NewCategory.update subMsg category
                 |> updateWith NewCategory NewCategoryMsg model
 
+        ( ImagesByCategoryMsg subMsg, ImagesByCategory id category ) ->
+            ImagesByCategory.update subMsg category
+                |> updateWith (ImagesByCategory id) ImagesByCategoryMsg model
+
         ( _, _ ) ->
             -- Disregard messages that arrived for the wrong page.
             ( model, Cmd.none )
@@ -246,3 +263,6 @@ subscriptions model =
 
         NewCategory category ->
             Sub.map NewCategoryMsg (NewCategory.subscriptions category)
+
+        ImagesByCategory _ category ->
+            Sub.map ImagesByCategoryMsg (ImagesByCategory.subscriptions category)
