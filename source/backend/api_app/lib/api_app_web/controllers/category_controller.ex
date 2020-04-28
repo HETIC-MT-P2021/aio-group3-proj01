@@ -27,10 +27,8 @@ defmodule ApiAppWeb.CategoryController do
 
   def show_images_by_category(conn, %{"id" => id}) do
     category = Images.get_category!(id)
-    {category_id, _} = Integer.parse(id)
-    images = Images.get_images_by_category(category_id)
 
-    render(conn, "images_by_categories.json", category: category, images: images)
+    render(conn, "images_by_category.json", category: category)
   end
 
   def update(conn, %{"id" => id, "category" => category_params}) do

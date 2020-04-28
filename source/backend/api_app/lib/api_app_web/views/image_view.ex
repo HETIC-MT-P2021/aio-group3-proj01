@@ -17,8 +17,8 @@ defmodule ApiAppWeb.ImageView do
       name: image.name,
       description: image.description,
       image_original_url: ImageHandler.url({image.image, image}, :original),
-      category: render_one(image.category, ApiAppWeb.CategoryView, "categories.json"),
-      tags: render_one(image.tag, ApiAppWeb.TagView, "tags.json")
+      category: render_one(image.category, ApiAppWeb.CategoryView, "category.json"),
+      tags: render_many(image.tag, ApiAppWeb.TagView, "show.json")
     }
   end
 end

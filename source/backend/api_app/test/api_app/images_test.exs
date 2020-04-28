@@ -185,8 +185,11 @@ defmodule ApiApp.ImagesTest do
     end
 
     test "create_image/1 with valid data creates a image" do
-      category = categories_fixture()
-      assert {:ok, %Image{} = image} = Images.create_image(%{@valid_attrs | "category_id" => category.id})
+      category = category_fixture()
+
+      assert {:ok, %Image{} = image} =
+               Images.create_image(%{@valid_attrs | "category_id" => category.id})
+
       assert image.description == "some description"
       assert image.image == "1528_27.jpg"
       assert image.name == "some name"
@@ -198,7 +201,7 @@ defmodule ApiApp.ImagesTest do
 
     test "update_image/2 with valid data updates the image" do
       image = image_fixture()
-      category = categories_fixture()
+      category = category_fixture()
       assert {:ok, %Image{} = image} = Images.update_image(image, @update_attrs)
       assert image.description == "some updated description"
       assert image.image == "1528_27.jpg"

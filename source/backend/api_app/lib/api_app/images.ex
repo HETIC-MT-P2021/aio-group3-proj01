@@ -36,7 +36,11 @@ defmodule ApiApp.Images do
       ** (Ecto.NoResultsError)
 
   """
-  def get_tag!(id), do: Repo.get!(Tag, id)
+  def get_tag!(id) do
+    Tag
+    |> Repo.get!(id)
+    |> Repo.preload(image: [:category, :tag])
+  end
 
   @doc """
   Creates a tag.
@@ -121,35 +125,6 @@ defmodule ApiApp.Images do
   end
 
   @doc """
-    Returns a list of images fetched by a specific tag
-  """
-  def get_image_by_tag(id) do
-    images_id =
-      Repo.all(
-        from ti in "tags_images",
-          where: ti.tag_id == ^id,
-          select: ti.image_id
-      )
-
-    images =
-      images_id
-      |> Enum.map(fn single_image_id ->
-        Repo.all(
-          from i in "image",
-            where: i.id == ^single_image_id,
-            select: %{
-              name: i.name,
-              description: i.description,
-              image_original_url: i.image,
-              category_id: i.category_id
-            }
-        )
-      end)
-
-    images
-  end
-
-  @doc """
   Returns the list of category.
 
   ## Examples
@@ -176,7 +151,11 @@ defmodule ApiApp.Images do
       ** (Ecto.NoResultsError)
 
   """
-  def get_category!(id), do: Repo.get!(Category, id)
+  def get_category!(id) do
+    Category
+    |> Repo.get!(id)
+    |> Repo.preload(image: [:category, :tag])
+    end
 
   @doc """
   Creates a category.
@@ -270,26 +249,12 @@ defmodule ApiApp.Images do
       ** (Ecto.NoResultsError)
 
   """
-  def get_image!(id), do: Repo.get!(Image, id)
+  def get_image!(id) do
+    Image
+    |> Repo.get!(id)
+    |> Repo.preload([:tag, :category])
+    end
 
-  @doc """
-    Returns a list of images fetched by a specific category
-  """
-  def get_images_by_category(id) do
-    images =
-      Repo.all(
-        from i in "image",
-          where: i.category_id == ^id,
-          select: %{
-            id: i.id,
-            name: i.name,
-            image_original_url: i.image,
-            description: i.description
-          }
-      )
-
-    images
-  end
 
   @doc """
   Creates a image.

@@ -14,7 +14,11 @@ defmodule ApiAppWeb.CategoryView do
     %{id: category.id, name: category.name}
   end
 
-  def render("images_by_categories.json", %{category: category, images: images}) do
-    %{id: category.id, name: category.name, images: images}
+  def render("images_by_category.json", %{category: category}) do
+    %{
+      id: category.id,
+      name: category.name,
+      images: render_many(category.image, ApiAppWeb.ImageView, "image.json")
+    }
   end
 end

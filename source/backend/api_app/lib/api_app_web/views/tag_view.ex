@@ -14,7 +14,7 @@ defmodule ApiAppWeb.TagView do
     %{id: tag.id, name: tag.name}
   end
 
-  def render("images_by_tags.json", %{tag: tag, images: images}) do
-    %{id: tag.id, name: tag.name, images: images}
+  def render("images_by_tag.json", %{tag: tag}) do
+    %{id: tag.id, name: tag.name, images: render_many(tag.image, ApiAppWeb.ImageView, "show.json")}
   end
 end

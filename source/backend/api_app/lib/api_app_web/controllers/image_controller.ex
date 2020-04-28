@@ -12,11 +12,10 @@ defmodule ApiAppWeb.ImageController do
       |> Repo.preload(:category)
       |> Repo.preload(:tag)
 
-
     render(conn, "index.json", image: image)
   end
 
-  def create(conn, %{"image" => image_params}) do
+  def create(conn, image_params) do
     with {:ok, %Image{} = image} <- Images.create_image(image_params) do
       image =
         image
@@ -39,13 +38,11 @@ defmodule ApiAppWeb.ImageController do
     render(conn, "show.json", image: image)
   end
 
-  def update(conn, %{"id" => id, "image" => image_params}) do
+  def update(conn, %{"id" => id} = image_params) do
     image = Images.get_image!(id)
 
     with {:ok, %Image{} = image} <- Images.update_image(image, image_params) do
-      image
-      |> Repo.preload(:category)
-      |> Repo.preload(:tag)
+      image = Repo.preload(image, :category)
 
       render(conn, "show.json", image: image)
     end
