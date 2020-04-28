@@ -100,7 +100,7 @@ viewForm model category=
 viewValidation : Model -> Html msg
 viewValidation model =
   if String.length model.modified > 1 then
-    div [ style "color" "green" ] [ text "Category created" ]
+    div [ style "color" "green" ] [ text "Category name changed!" ]
   else 
     div [] []
 
