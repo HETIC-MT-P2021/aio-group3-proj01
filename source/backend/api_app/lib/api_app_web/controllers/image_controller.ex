@@ -1,7 +1,7 @@
 defmodule ApiAppWeb.ImageController do
   use ApiAppWeb, :controller
 
-  alias ApiApp.Images
+  alias ApiApp.{Images, Repo}
   alias ApiApp.Images.Image
 
   action_fallback ApiAppWeb.FallbackController

@@ -4,6 +4,7 @@ defmodule ApiApp.Images do
   """
 
   import Ecto.Query, warn: false
+  alias ApiApp.Repo
   alias ApiApp.{Repo, ImageHandler}
 
   alias ApiApp.Images.{Tag, Category, Image}
@@ -305,7 +306,7 @@ defmodule ApiApp.Images do
   def create_image(attrs \\ %{}) do
     case %Image{}
          |> Image.changeset(%{attrs | "image" => attrs["image"].filename})
-         |> Ecto.Changeset.cast_assoc(:category, with: &Categories.changeset/2)
+         |> Ecto.Changeset.cast_assoc(:category, with: &Category.changeset/2)
          # |> Ecto.Changeset.put_assoc(:tags, tags)
          |> Repo.insert() do
       {:ok, image} ->

@@ -10,8 +10,8 @@ defmodule ApiAppWeb.Router do
   scope "/api", ApiAppWeb do
     pipe_through :api
 
-    resources "/categories", CategorYController, except: [:new, :edit]
-    get "/category/images/:id", CategorYController, :show_images_by_category
+    resources "/categories", CategoryController, except: [:new, :edit]
+    get "/category/images/:id", CategoryController, :show_images_by_category
     resources "/tags", TagController, except: [:new, :edit]
     get "/tag/images/:id", TagController, :show_images_by_tag
     resources "/image", ImageController, except: [:new, :edit]

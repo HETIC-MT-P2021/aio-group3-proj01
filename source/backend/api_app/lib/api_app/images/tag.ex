@@ -2,7 +2,7 @@ defmodule ApiApp.Images.Tag do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ApiApp.Images.{Categories, TagsImages}
+  alias ApiApp.Images.{Image, TagsImages}
 
   schema "tag" do
     field :name, :string

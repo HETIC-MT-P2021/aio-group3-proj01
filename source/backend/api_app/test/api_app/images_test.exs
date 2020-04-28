@@ -1,7 +1,7 @@
 defmodule ApiApp.ImagesTest do
   use ApiApp.DataCase
 
-  alias ApiApp.Images
+  alias ApiApp.{Images, ImageHandler}
 
   describe "tag" do
     alias ApiApp.Images.Tag
