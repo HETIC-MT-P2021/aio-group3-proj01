@@ -1,22 +1,22 @@
-module Tests exposing (..)
+module Tests exposing (all)
 
-import Test exposing (..)
+import Test exposing (test, Test, describe)
 import Expect
-
-
--- Check out https://package.elm-lang.org/packages/elm-explorations/test/latest to learn more about testing in Elm!
 
 
 all : Test
 all =
-    describe "A Test Suite"
+    describe "A dummy Test Suite."
         [ test "Addition" <|
             \_ ->
-                Expect.equal 10 (3 + 7)
-        , test "String.left" <|
+                Expect.equal 15 (8 + 7)
+        , test "Substraction" <|
             \_ ->
-                Expect.equal "a" (String.left 1 "abcdefg")
-        , test "This test should fail" <|
+                Expect.equal 13 (23 - 10)
+        , test "Multiply" <|
             \_ ->
-                Expect.fail "failed as expected!"
+                Expect.equal 69 (23 * 3)
+        , test "Concatenation" <|
+            \_ ->
+                Expect.equal "ab" ("a" ++ "b")
         ]
