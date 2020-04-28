@@ -64,6 +64,13 @@ h1 {
   flex-wrap: wrap;
   align-items: center;
 }
+.tags-page .row .tags-list{
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
 
 .categories-page .btn {
   position: fixed;
