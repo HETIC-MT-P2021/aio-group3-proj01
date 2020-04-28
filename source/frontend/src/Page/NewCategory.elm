@@ -129,7 +129,7 @@ postCategory model =
         body =
             Http.jsonBody <|
                     Encode.object
-                        [ ( "categories", Encode.object
+                        [ ( "category", Encode.object
                             [ ( "name", Encode.string model.name ) ] ) ]
         headers = 
             []
