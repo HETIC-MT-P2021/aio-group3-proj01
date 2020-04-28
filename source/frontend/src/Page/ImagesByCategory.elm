@@ -10,6 +10,7 @@ import Html.Events exposing (onInput)
 
 import Session exposing (Session)
 import Task exposing (Task)
+import Route exposing (Route)
 
 import Browser exposing (sandbox)
 import Http exposing (Error(..))
@@ -96,15 +97,15 @@ view model =
             ]
     }
 
+
 viewImage : Image -> Html Msg
 viewImage image =
     div [class "card"] [
         img [src ("http://localhost:4000" ++ image.image_original_url), class "card-img-top"][]
-        , div [class "card-body"] [
-            p [class "card-text"] [text image.description]
+        , a [class "card-body", Route.href (Route.ImageById image.id)] [
+            p [class "card-text"] [text image.name]
         ]
     ]
-
 -- UPDATE
 
 update : Msg -> Model -> ( Model, Cmd Msg )

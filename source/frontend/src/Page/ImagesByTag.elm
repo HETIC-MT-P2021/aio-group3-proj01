@@ -1,4 +1,4 @@
-module Page.Home exposing (Model, Msg, init, subscriptions, toSession, update, view)
+module Page.ImagesByTag exposing (Model, Msg, init, subscriptions, toSession, update, view)
 
 {-| The homepage. You can get here via either the / or /#/ routes.
 -}
@@ -9,8 +9,8 @@ import Html.Attributes exposing (class, value, src)
 import Html.Events exposing (onInput)
 
 import Session exposing (Session)
-import Route exposing (Route)
 import Task exposing (Task)
+import Route exposing (Route)
 
 import Browser exposing (sandbox)
 import Http exposing (Error(..))
@@ -23,6 +23,7 @@ type alias Model =
         session : Session
         , images: List Image
         , error : Maybe String
+        , tag_id: Int
     }
 
 type alias Image =
@@ -35,30 +36,31 @@ type alias Image =
 
 decodeImage : Decoder Image
 decodeImage =
-   Decode.map4 Image
+   Decode.field "data" (Decode.map4 Image
      (Decode.field "id" Decode.int)
      (Decode.field "name" Decode.string)
      (Decode.field "description" Decode.string)
-     (Decode.field "image_original_url" Decode.string)
+     (Decode.field "image_original_url" Decode.string))
 
 type Msg
     = GotImages (Result Http.Error (List Image))
 
-init : Session -> ( Model, Cmd Msg )
-init session =
+init : Session -> Int -> ( Model, Cmd Msg )
+init session id =
     (
     { 
         session = session
         , images = []
         , error = Nothing
+        , tag_id = id
     }
-    , getImages
+    , getImages id
     )
-getImages : Cmd Msg
-getImages =
+getImages : Int -> Cmd Msg
+getImages id =
     Http.get
-        { url = "http://localhost:4000/api/image"
-        , expect = Http.expectJson GotImages (Decode.field "data" (Decode.list decodeImage))
+        { url = "http://localhost:4000/api/tag/images/" ++ (String.fromInt id)
+        , expect = Http.expectJson GotImages (Decode.field "images" (Decode.list decodeImage))
         }
 
 
@@ -66,7 +68,7 @@ getImages =
 
 view : Model -> { title : String, content : Html Msg }
 view model =
-    { title = "Home"
+    { title = "Image by tags"
     , content =      
         let
             nb_image = List.length model.images
@@ -95,6 +97,7 @@ view model =
             ]
     }
 
+
 viewImage : Image -> Html Msg
 viewImage image =
     div [class "card"] [
@@ -103,7 +106,6 @@ viewImage image =
             p [class "card-text"] [text image.name]
         ]
     ]
-
 -- UPDATE
 
 update : Msg -> Model -> ( Model, Cmd Msg )
