@@ -3,7 +3,6 @@ defmodule ApiAppWeb.ImageController do
 
   alias ApiApp.Images
   alias ApiApp.Images.Image
-  alias ApiApp.Repo
 
   action_fallback ApiAppWeb.FallbackController
 
@@ -11,16 +10,18 @@ defmodule ApiAppWeb.ImageController do
     image =
       Images.list_image()
       |> Repo.preload(:category)
+      |> Repo.preload(:tag)
+
 
     render(conn, "index.json", image: image)
   end
 
-  def create(conn, image_params) do
+  def create(conn, %{"image" => image_params}) do
     with {:ok, %Image{} = image} <- Images.create_image(image_params) do
       image =
         image
         |> Repo.preload(:category)
-        |> Repo.preload(:tags)
+        |> Repo.preload(:tag)
 
       conn
       |> put_status(:created)
@@ -33,16 +34,19 @@ defmodule ApiAppWeb.ImageController do
     image =
       Images.get_image!(id)
       |> Repo.preload(:category)
-      |> Repo.preload(:tags)
+      |> Repo.preload(:tag)
 
     render(conn, "show.json", image: image)
   end
 
-  def update(conn, %{"id" => id} = image_params) do
+  def update(conn, %{"id" => id, "image" => image_params}) do
     image = Images.get_image!(id)
 
     with {:ok, %Image{} = image} <- Images.update_image(image, image_params) do
-      image = Repo.preload(image, :category)
+      image
+      |> Repo.preload(:category)
+      |> Repo.preload(:tag)
+
       render(conn, "show.json", image: image)
     end
   end
@@ -51,6 +55,10 @@ defmodule ApiAppWeb.ImageController do
     image = Images.get_image!(id)
 
     with {:ok, %Image{}} <- Images.delete_image(image) do
+      image
+      |> Repo.preload(:category)
+      |> Repo.preload(:tag)
+
       send_resp(conn, :no_content, "")
     end
   end

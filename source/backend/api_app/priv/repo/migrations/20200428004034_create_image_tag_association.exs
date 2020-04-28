@@ -1,4 +1,4 @@
-defmodule ApiApp.Repo.Migrations.ImageTagAssociation do
+defmodule ApiApp.Repo.Migrations.CreateImageTagAssociation do
   use Ecto.Migration
 
   def change do

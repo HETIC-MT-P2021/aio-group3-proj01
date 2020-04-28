@@ -1,19 +1,17 @@
 defmodule ApiApp.Images.Image do
   use Ecto.Schema
   import Ecto.Changeset
-
-  alias ApiApp.Images.{Categories, Tags}
+  alias ApiApp.Images.{Tag, TagsImages}
 
   schema "image" do
     field :description, :string
     field :image, :string
     field :name, :string
-    belongs_to :category, Categories, foreign_key: :category_id, on_replace: :nilify
+    field :category_id, :id
 
-    many_to_many :tags, Tags,
+    many_to_many :tag, Tag,
       join_through: TagsImages,
-      on_replace: :delete,
-      join_keys: [image_id: :id, tag_id: :id]
+      on_replace: :delete
 
     timestamps()
   end
@@ -21,8 +19,8 @@ defmodule ApiApp.Images.Image do
   @doc false
   def changeset(image, attrs) do
     image
-    |> cast(attrs, [:name, :description, :category_id, :image])
-    |> validate_required([:name, :description, :category_id, :image])
+    |> cast(attrs, [:name, :description, :image, :category_id])
+    |> validate_required([:name, :description, :image, :category_id])
     |> foreign_key_constraint(:category_id,
       name: :image_category_id_fkey,
       message: "Category not found!"

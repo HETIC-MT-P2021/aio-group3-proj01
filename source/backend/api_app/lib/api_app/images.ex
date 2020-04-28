@@ -5,101 +5,8 @@ defmodule ApiApp.Images do
 
   import Ecto.Query, warn: false
   alias ApiApp.{Repo, ImageHandler}
-  alias ApiApp.Images.{Categories, Tags, Image}
 
-  @doc """
-  Returns the list of category.
-
-  ## Examples
-
-      iex> list_category()
-      [%Categories{}, ...]
-
-  """
-  def list_category do
-    Repo.all(Categories)
-  end
-
-  @doc """
-  Gets a single categories.
-
-  Raises `Ecto.NoResultsError` if the Categories does not exist.
-
-  ## Examples
-
-      iex> get_categories!(123)
-      %Categories{}
-
-      iex> get_categories!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_categories!(id), do: Repo.get!(Categories, id)
-
-  @doc """
-  Creates a categories.
-
-  ## Examples
-
-      iex> create_categories(%{field: value})
-      {:ok, %Categories{}}
-
-      iex> create_categories(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_categories(attrs \\ %{}) do
-    %Categories{}
-    |> Categories.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a categories.
-
-  ## Examples
-
-      iex> update_categories(categories, %{field: new_value})
-      {:ok, %Categories{}}
-
-      iex> update_categories(categories, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_categories(%Categories{} = categories, attrs) do
-    categories
-    |> Categories.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a categories.
-
-  ## Examples
-
-      iex> delete_categories(categories)
-      {:ok, %Categories{}}
-
-      iex> delete_categories(categories)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_categories(%Categories{} = categories) do
-    Repo.delete(categories)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking categories changes.
-
-  ## Examples
-
-      iex> change_categories(categories)
-      %Ecto.Changeset{source: %Categories{}}
-
-  """
-  def change_categories(%Categories{} = categories) do
-    Categories.changeset(categories, %{})
-  end
+  alias ApiApp.Images.{Tag, Category, Image}
 
   @doc """
   Returns the list of tag.
@@ -107,106 +14,232 @@ defmodule ApiApp.Images do
   ## Examples
 
       iex> list_tag()
-      [%Tags{}, ...]
+      [%Tag{}, ...]
 
   """
   def list_tag do
-    Repo.all(Tags)
+    Repo.all(Tag)
   end
 
   @doc """
-  Gets a single tags.
+  Gets a single tag.
 
-  Raises `Ecto.NoResultsError` if the Tags does not exist.
+  Raises `Ecto.NoResultsError` if the Tag does not exist.
 
   ## Examples
 
-      iex> get_tags!(123)
-      %Tags{}
+      iex> get_tag!(123)
+      %Tag{}
 
-      iex> get_tags!(456)
+      iex> get_tag!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_tags!(id), do: Repo.get!(Tags, id)
+  def get_tag!(id), do: Repo.get!(Tag, id)
 
   @doc """
-  Creates a tags.
+  Creates a tag.
 
   ## Examples
 
-      iex> create_tags(%{field: value})
-      {:ok, %Tags{}}
+      iex> create_tag(%{field: value})
+      {:ok, %Tag{}}
 
-      iex> create_tags(%{field: bad_value})
+      iex> create_tag(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_tags(attrs \\ %{}) do
-    %Tags{}
-    |> Tags.changeset(attrs)
+  def create_tag(attrs \\ %{}) do
+    %Tag{}
+    |> Tag.changeset(attrs)
     |> Repo.insert()
   end
 
   @doc """
-  Updates a tags.
+  Updates a tag.
 
   ## Examples
 
-      iex> update_tags(tags, %{field: new_value})
-      {:ok, %Tags{}}
+      iex> update_tag(tag, %{field: new_value})
+      {:ok, %Tag{}}
 
-      iex> update_tags(tags, %{field: bad_value})
+      iex> update_tag(tag, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_tags(%Tags{} = tags, attrs) do
-    tags
-    |> Tags.changeset(attrs)
+  def update_tag(%Tag{} = tag, attrs) do
+    tag
+    |> Tag.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a tags.
+  Deletes a tag.
 
   ## Examples
 
-      iex> delete_tags(tags)
-      {:ok, %Tags{}}
+      iex> delete_tag(tag)
+      {:ok, %Tag{}}
 
-      iex> delete_tags(tags)
+      iex> delete_tag(tag)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_tags(%Tags{} = tags) do
-    Repo.delete(tags)
+  def delete_tag(%Tag{} = tag) do
+    Repo.delete(tag)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking tags changes.
+  Returns an `%Ecto.Changeset{}` for tracking tag changes.
 
   ## Examples
 
-      iex> change_tags(tags)
-      %Ecto.Changeset{source: %Tags{}}
+      iex> change_tag(tag)
+      %Ecto.Changeset{source: %Tag{}}
 
   """
-  def change_tags(%Tags{} = tags) do
-    Tags.changeset(tags, %{})
+  def change_tag(%Tag{} = tag) do
+    Tag.changeset(tag, %{})
   end
 
+  @doc """
+  Query all existing tags from the argument list and create if the tag does not exist
+  """
   def find_and_create_tags(tags) do
-    existing_tags = Repo.all(from t in Tags, where: t.name in ^tags)
+    existing_tags = Repo.all(from t in Tag, where: t.name in ^tags)
     new_tag_names = tags -- Enum.map(existing_tags, fn tag -> tag.name end)
 
     new_tags =
       new_tag_names
       |> Enum.map(fn tag_name ->
-        {:ok, tag} = create_tags(%{name: tag_name})
+        {:ok, tag} = create_tag(%{name: tag_name})
         tag
       end)
 
     existing_tags ++ new_tags
+  end
+
+  @doc """
+    Returns a list of images fetched by a specific tag
+  """
+  def get_image_by_tag(id) do
+    images_id =
+      Repo.all(
+        from ti in "tags_images",
+          where: ti.tag_id == ^id,
+          select: ti.image_id
+      )
+
+    images =
+      images_id
+      |> Enum.map(fn single_image_id ->
+        Repo.all(
+          from i in "image",
+            where: i.id == ^single_image_id,
+            select: %{
+              name: i.name,
+              description: i.description,
+              image_original_url: i.image,
+              category_id: i.category_id
+            }
+        )
+      end)
+
+    images
+  end
+
+  @doc """
+  Returns the list of category.
+
+  ## Examples
+
+      iex> list_category()
+      [%Category{}, ...]
+
+  """
+  def list_category do
+    Repo.all(Category)
+  end
+
+  @doc """
+  Gets a single category.
+
+  Raises `Ecto.NoResultsError` if the Category does not exist.
+
+  ## Examples
+
+      iex> get_category!(123)
+      %Category{}
+
+      iex> get_category!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_category!(id), do: Repo.get!(Category, id)
+
+  @doc """
+  Creates a category.
+
+  ## Examples
+
+      iex> create_category(%{field: value})
+      {:ok, %Category{}}
+
+      iex> create_category(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_category(attrs \\ %{}) do
+    %Category{}
+    |> Category.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a category.
+
+  ## Examples
+
+      iex> update_category(category, %{field: new_value})
+      {:ok, %Category{}}
+
+      iex> update_category(category, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_category(%Category{} = category, attrs) do
+    category
+    |> Category.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a category.
+
+  ## Examples
+
+      iex> delete_category(category)
+      {:ok, %Category{}}
+
+      iex> delete_category(category)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_category(%Category{} = category) do
+    Repo.delete(category)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking category changes.
+
+  ## Examples
+
+      iex> change_category(category)
+      %Ecto.Changeset{source: %Category{}}
+
+  """
+  def change_category(%Category{} = category) do
+    Category.changeset(category, %{})
   end
 
   @doc """
@@ -219,8 +252,7 @@ defmodule ApiApp.Images do
 
   """
   def list_image do
-    Image
-    |> Repo.all()
+    Repo.all(Image)
   end
 
   @doc """
@@ -237,13 +269,29 @@ defmodule ApiApp.Images do
       ** (Ecto.NoResultsError)
 
   """
-  def get_image!(id) do
-    Image
-    |> Repo.get!(id)
+  def get_image!(id), do: Repo.get!(Image, id)
+
+  @doc """
+    Returns a list of images fetched by a specific category
+  """
+  def get_images_by_category(id) do
+    images =
+      Repo.all(
+        from i in "image",
+          where: i.category_id == ^id,
+          select: %{
+            id: i.id,
+            name: i.name,
+            image_original_url: i.image,
+            description: i.description
+          }
+      )
+
+    images
   end
 
   @doc """
-  Creates a image and associates the category passed in the object, uses find_and_create_tags for tags object.
+  Creates a image.
 
   ## Examples
 
@@ -255,7 +303,6 @@ defmodule ApiApp.Images do
 
   """
   def create_image(attrs \\ %{}) do
-    # IO.inspect(attrs, label: "CREATE ATTRS")
     case %Image{}
          |> Image.changeset(%{attrs | "image" => attrs["image"].filename})
          |> Ecto.Changeset.cast_assoc(:category, with: &Categories.changeset/2)
@@ -272,23 +319,6 @@ defmodule ApiApp.Images do
           end)
         end
 
-        {:ok, _image_name} = ImageHandler.store({attrs["image"], image})
-        {:ok, image}
-
-      error ->
-        error
-    end
-  end
-
-  def create_image_test(attrs \\ %{}) do
-    # IO.inspect(attrs, label: "CREATE ATTRS")
-    tags = find_and_create_tags(attrs["tags"])
-
-    case %Image{}
-         |> Image.changeset(%{attrs | "image" => attrs["image"].filename})
-         |> Ecto.Changeset.cast_assoc(:category, with: &Categories.changeset/2)
-         |> Repo.insert() do
-      {:ok, image} ->
         {:ok, _image_name} = ImageHandler.store({attrs["image"], image})
         {:ok, image}
 
@@ -351,7 +381,6 @@ defmodule ApiApp.Images do
 
   """
   def delete_image(%Image{} = image) do
-    ImageHandler.delete({image.image, image})
     Repo.delete(image)
   end
 
@@ -366,53 +395,5 @@ defmodule ApiApp.Images do
   """
   def change_image(%Image{} = image) do
     Image.changeset(image, %{})
-  end
-
-  @doc """
-    Returns a list of images fetched by a specific category
-  """
-  def get_images_by_category(id) do
-    images =
-      Repo.all(
-        from i in "image",
-          where: i.category_id == ^id,
-          select: %{
-            id: i.id,
-            name: i.name,
-            image_original_url: i.image,
-            description: i.description
-          }
-      )
-
-    images
-  end
-
-  @doc """
-    Returns a list of images fetched by a specific tag
-  """
-  def get_image_by_tags(id) do
-    images_id =
-      Repo.all(
-        from ti in "tags_images",
-          where: ti.tag_id == ^id,
-          select: ti.image_id
-      )
-
-    images =
-      images_id
-      |> Enum.map(fn single_image_id ->
-        Repo.all(
-          from i in "image",
-            where: i.id == ^single_image_id,
-            select: %{
-              name: i.name,
-              description: i.description,
-              image_original_url: i.image,
-              category_id: i.category_id
-            }
-        )
-      end)
-
-    images
   end
 end

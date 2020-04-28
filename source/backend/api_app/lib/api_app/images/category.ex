@@ -1,6 +1,7 @@
-defmodule ApiApp.Images.Categories do
+defmodule ApiApp.Images.Category do
   use Ecto.Schema
   import Ecto.Changeset
+
   alias ApiApp.Images.Image
 
   schema "category" do
@@ -11,11 +12,11 @@ defmodule ApiApp.Images.Categories do
   end
 
   @doc false
-  def changeset(categories, attrs) do
-    categories
+  def changeset(category, attrs) do
+    category
     |> cast(attrs, [:name])
     |> validate_required([:name])
     |> unique_constraint(:name)
-    |> validate_length(:name, max: 60, count: :codepoints)
+    |> validate_length(:name, min: 2)
   end
 end

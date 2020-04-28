@@ -13,10 +13,10 @@ config :api_app,
 # Configures the endpoint
 config :api_app, ApiAppWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "w1qiQMXkvdkPxGTvIFrvLbhYzijcGqYYqFdg9zXCZz3cSFqmSzjZA9APWSGsCfKI",
+  secret_key_base: "A/CGTQLflv1q0wzniM5XOg5jhSift0yMCPWlZrRKJkLsltGBObOMgqdnQhqh5X05",
   render_errors: [view: ApiAppWeb.ErrorView, accepts: ~w(json)],
   pubsub: [name: ApiApp.PubSub, adapter: Phoenix.PubSub.PG2],
-  live_view: [signing_salt: "Ojr/sYL8"]
+  live_view: [signing_salt: "rDlDfY0F"]
 
 # Configures Elixir's Logger
 config :logger, :console,

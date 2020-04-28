@@ -1,7 +1,6 @@
 defmodule ApiAppWeb.ImageView do
   use ApiAppWeb, :view
   alias ApiAppWeb.ImageView
-  alias ApiApp.ImageHandler
 
   def render("index.json", %{image: image}) do
     %{data: render_many(image, ImageView, "image.json")}
@@ -16,9 +15,9 @@ defmodule ApiAppWeb.ImageView do
       id: image.id,
       name: image.name,
       description: image.description,
-      image_original_url: ImageHandler.url({image.image, image}, :original),
-      category: render_one(image.category, ApiAppWeb.CategoriesView, "categories.json"),
-      tags: render_many(image.tags, ApiAppWeb.TagsView, "tags.json")
+      image: image.image,
+      category: render_one(image.category, ApiAppWeb.CategoryView, "categories.json"),
+      tags: render_one(image.tag, ApiAppWeb.TagView, "tags.json")
     }
   end
 end

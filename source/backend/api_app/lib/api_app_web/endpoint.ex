@@ -9,14 +9,12 @@ defmodule ApiAppWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_api_app_key",
-    signing_salt: "Rt8uaz5j"
+    signing_salt: "DEXUp3km"
   ]
 
   socket "/socket", ApiAppWeb.UserSocket,
     websocket: true,
     longpoll: false
-
-  socket "/live", Phoenix.LiveView.Socket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
