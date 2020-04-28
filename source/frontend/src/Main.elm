@@ -12,6 +12,7 @@ import Page.NewCategory as NewCategory
 import Page.ImagesByCategory as ImagesByCategory
 import Page.ImagesByTag as ImagesByTag
 import Page.ImageById as ImageById
+import Page.EditCategory as EditCategory
 import Page.Tags as Tags
 import Page.Categories as Categories
 import Page.Blank as Blank
@@ -31,6 +32,7 @@ type Model
     | ImagesByCategory Int ImagesByCategory.Model
     | ImagesByTag Int ImagesByTag.Model
     | ImageById Int ImageById.Model
+    | EditCategory Int EditCategory.Model
 
 -- MODEL
 
@@ -98,6 +100,9 @@ view model =
         ImageById _ id ->
             viewPage Page.ImageById ImageByIdMsg (ImageById.view id)
 
+        EditCategory _ id ->
+            viewPage Page.EditCategory EditCategoryMsg (EditCategory.view id)
+
 
 -- UPDATE
 
@@ -113,6 +118,7 @@ type Msg
     | ImagesByCategoryMsg ImagesByCategory.Msg
     | ImagesByTagMsg ImagesByTag.Msg
     | ImageByIdMsg ImageById.Msg
+    | EditCategoryMsg EditCategory.Msg
 
 toSession : Model -> Session
 toSession page =
@@ -146,6 +152,9 @@ toSession page =
 
         ImageById _ id ->
             ImageById.toSession id
+
+        EditCategory _ id ->
+            EditCategory.toSession id
 
 
 changeRouteTo : Maybe Route -> Model -> ( Model, Cmd Msg )
@@ -192,6 +201,10 @@ changeRouteTo maybeRoute model =
         Just (Route.ImageById id) ->
             ImageById.init session id
                 |> updateWith (ImageById id) ImageByIdMsg model
+
+        Just (Route.EditCategory id) ->
+            EditCategory.init session id
+                |> updateWith (EditCategory id) EditCategoryMsg model
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -258,6 +271,10 @@ update msg model =
             ImageById.update subMsg category
                 |> updateWith (ImageById id) ImageByIdMsg model
 
+        ( EditCategoryMsg subMsg, EditCategory id category ) ->
+            EditCategory.update subMsg category
+                |> updateWith (EditCategory id) EditCategoryMsg model
+
         ( _, _ ) ->
             -- Disregard messages that arrived for the wrong page.
             ( model, Cmd.none )
@@ -306,3 +323,6 @@ subscriptions model =
 
         ImageById _ id ->
             Sub.map ImageByIdMsg (ImageById.subscriptions id)
+
+        EditCategory _ id ->
+            Sub.map EditCategoryMsg (EditCategory.subscriptions id)

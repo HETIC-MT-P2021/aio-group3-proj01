@@ -190,7 +190,7 @@ defmodule ApiApp.Images do
   def update_category(%Category{} = category, attrs) do
     category
     |> Category.changeset(attrs)
-    |> Repo.preload(:image)
+    # |> Repo.preload(:image)
     |> Repo.update()
   end
 

@@ -68,7 +68,12 @@ viewCategory: Category -> Html Msg
 viewCategory category = 
     div [class "link-card"] [
         a [Route.href (Route.ImagesByCategory category.id)] [text category.name]
-        , i [class "fas fa-times", onClick (DeleteCategoryMsg category.id)][]
+        , div [class "div-buttons"] [
+            i [class "fas fa-times", onClick (DeleteCategoryMsg category.id)][]
+            , a [Route.href (Route.EditCategory category.id)][
+                i [class "fas fa-pen"][]
+            ]
+        ]
     ]
 
 -- UPDATE

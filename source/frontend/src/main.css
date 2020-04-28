@@ -92,7 +92,7 @@ h1 {
   position: relative;
 }
 
-.link-card i {
+.link-card .div-buttons {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -101,7 +101,7 @@ h1 {
   display: none;
 }
 
-.link-card:hover i {
+.link-card:hover .div-buttons {
   display: block;
 }
 
