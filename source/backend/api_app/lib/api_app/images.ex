@@ -190,6 +190,7 @@ defmodule ApiApp.Images do
   def update_category(%Category{} = category, attrs) do
     category
     |> Category.changeset(attrs)
+    |> Repo.preload(:image)
     |> Repo.update()
   end
 
@@ -285,6 +286,22 @@ defmodule ApiApp.Images do
           end)
         end
 
+        {:ok, _image_name} = ImageHandler.store({attrs["image"], image})
+        {:ok, image}
+
+      error ->
+        error
+    end
+  end
+
+  def create_image_test(attrs \\ %{}) do
+    # IO.inspect(attrs, label: "CREATE ATTRS")
+
+    case %Image{}
+         |> Image.changeset(%{attrs | "image" => attrs["image"].filename})
+         |> Ecto.Changeset.cast_assoc(:category, with: &Categories.changeset/2)
+         |> Repo.insert() do
+      {:ok, image} ->
         {:ok, _image_name} = ImageHandler.store({attrs["image"], image})
         {:ok, image}
 
