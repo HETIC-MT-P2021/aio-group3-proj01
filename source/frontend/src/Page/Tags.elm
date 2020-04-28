@@ -63,7 +63,7 @@ viewTags tags =
 viewTag: Tag -> Html Msg
 viewTag tag = 
     div [class "link-card"] [
-        a [Route.href (Route.Home)] [text tag.name]
+        a [Route.href (Route.ImagesByTag tag.id)] [text tag.name]
         , 
         i [class "fas fa-times", onClick (DeleteTagMsg tag.id)][]
     ]

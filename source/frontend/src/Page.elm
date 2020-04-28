@@ -20,6 +20,7 @@ type Page
     | Categories
     | NewCategory
     | ImagesByCategory
+    | ImagesByTag
     | ImageById
 
 

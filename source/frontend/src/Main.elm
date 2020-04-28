@@ -10,6 +10,7 @@ import Page.Home as Home
 import Page.NewImage as NewImage
 import Page.NewCategory as NewCategory
 import Page.ImagesByCategory as ImagesByCategory
+import Page.ImagesByTag as ImagesByTag
 import Page.ImageById as ImageById
 import Page.Tags as Tags
 import Page.Categories as Categories
@@ -28,6 +29,7 @@ type Model
     | Tags Tags.Model
     | NewCategory NewCategory.Model
     | ImagesByCategory Int ImagesByCategory.Model
+    | ImagesByTag Int ImagesByTag.Model
     | ImageById Int ImageById.Model
 
 -- MODEL
@@ -90,6 +92,9 @@ view model =
         ImagesByCategory _ category ->
             viewPage Page.ImagesByCategory ImagesByCategoryMsg (ImagesByCategory.view category)
 
+        ImagesByTag _ tag ->
+            viewPage Page.ImagesByTag ImagesByTagMsg (ImagesByTag.view tag)
+
         ImageById _ id ->
             viewPage Page.ImageById ImageByIdMsg (ImageById.view id)
 
@@ -106,6 +111,7 @@ type Msg
     | TagsMsg Tags.Msg
     | NewCategoryMsg NewCategory.Msg
     | ImagesByCategoryMsg ImagesByCategory.Msg
+    | ImagesByTagMsg ImagesByTag.Msg
     | ImageByIdMsg ImageById.Msg
 
 toSession : Model -> Session
@@ -134,6 +140,9 @@ toSession page =
 
         ImagesByCategory _ category ->
             ImagesByCategory.toSession category
+
+        ImagesByTag _ tag ->
+            ImagesByTag.toSession tag
 
         ImageById _ id ->
             ImageById.toSession id
@@ -175,6 +184,10 @@ changeRouteTo maybeRoute model =
         Just (Route.ImagesByCategory id) ->
             ImagesByCategory.init session id
                 |> updateWith (ImagesByCategory id) ImagesByCategoryMsg model
+
+        Just (Route.ImagesByTag id) ->
+            ImagesByTag.init session id
+                |> updateWith (ImagesByTag id) ImagesByTagMsg model
 
         Just (Route.ImageById id) ->
             ImageById.init session id
@@ -237,6 +250,10 @@ update msg model =
             ImagesByCategory.update subMsg category
                 |> updateWith (ImagesByCategory id) ImagesByCategoryMsg model
 
+        ( ImagesByTagMsg subMsg, ImagesByTag id tag ) ->
+            ImagesByTag.update subMsg tag
+                |> updateWith (ImagesByTag id) ImagesByTagMsg model
+
         ( ImageByIdMsg subMsg, ImageById id category ) ->
             ImageById.update subMsg category
                 |> updateWith (ImageById id) ImageByIdMsg model
@@ -283,6 +300,9 @@ subscriptions model =
 
         ImagesByCategory _ category ->
             Sub.map ImagesByCategoryMsg (ImagesByCategory.subscriptions category)
+
+        ImagesByTag _ tag ->
+            Sub.map ImagesByTagMsg (ImagesByTag.subscriptions tag)
 
         ImageById _ id ->
             Sub.map ImageByIdMsg (ImageById.subscriptions id)

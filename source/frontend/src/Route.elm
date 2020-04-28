@@ -19,6 +19,7 @@ type Route
     | Categories
     | NewCategory
     | ImagesByCategory Int
+    | ImagesByTag Int
     | ImageById Int
 
 
@@ -31,6 +32,7 @@ parser =
         , Parser.map Categories (s "categories")
         , Parser.map NewCategory (s "new-category")
         , Parser.map ImagesByCategory (s "category" </> int)
+        , Parser.map ImagesByTag (s "tag" </> int)
         , Parser.map ImageById (s "image" </> int)
         ]
 
@@ -89,6 +91,9 @@ routeToPieces page =
         
         ImagesByCategory id ->
             [ "category", String.fromInt id]
+        
+        ImagesByTag id ->
+            [ "tag", String.fromInt id]
         
         ImageById id ->
             [ "image", String.fromInt id]
