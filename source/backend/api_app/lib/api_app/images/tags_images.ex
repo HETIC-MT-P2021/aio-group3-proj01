@@ -2,12 +2,12 @@ defmodule TagsImages do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ApiApp.Images.{Image, Tags}
+  alias ApiApp.Images.{Image, Tag}
 
   @primary_key false
   schema "tags_images" do
     belongs_to :image, Image
-    belongs_to :tag, Tags
+    belongs_to :tag, Tag
 
     timestamps()
   end

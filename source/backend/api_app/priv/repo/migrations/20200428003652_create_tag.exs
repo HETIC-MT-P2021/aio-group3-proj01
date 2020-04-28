@@ -7,5 +7,7 @@ defmodule ApiApp.Repo.Migrations.CreateTag do
 
       timestamps()
     end
+
+    create unique_index(:tag, [:name])
   end
 end

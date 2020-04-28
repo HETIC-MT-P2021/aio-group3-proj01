@@ -1,126 +1,124 @@
 defmodule ApiApp.ImagesTest do
   use ApiApp.DataCase
 
-  alias ApiApp.Images
+  alias ApiApp.{Images, ImageHandler}
 
-  describe "category" do
-    alias ApiApp.Images.Categories
+  describe "tag" do
+    alias ApiApp.Images.Tag
 
-    @valid_attrs %{id: 42, name: "some name"}
-    @update_attrs %{id: 42, name: "some updated name"}
-    @invalid_attrs %{id: nil, name: nil}
+    @valid_attrs %{name: "some name"}
+    @update_attrs %{name: "some updated name"}
+    @invalid_attrs %{name: nil}
 
-    def categories_fixture() do
-      {:ok, categories} =
-        %{name: "Category#{DateTime.utc_now()}"}
+    def tag_fixture(attrs \\ %{}) do
+      {:ok, tag} =
+        attrs
         |> Enum.into(@valid_attrs)
-        |> Images.create_categories()
+        |> Images.create_tag()
 
-      categories
+      tag
     end
 
-    test "list_category/0 returns all category" do
-      categories = categories_fixture()
-      assert Images.list_category() == [categories]
+
+    test "list_tag/0 returns all tag" do
+      tag = tag_fixture()
+      assert Images.list_tag() == [tag]
     end
 
-    test "get_categories!/1 returns the categories with given id" do
-      categories = categories_fixture()
-      assert Images.get_categories!(categories.id) == categories
+    @tag individual_test: "tag_id"
+    test "get_tag!/1 returns the tag with given id" do
+      tag = tag_fixture()
+      %{:id => id, :name => name} = tag
+      #assert Images.get_tag!(tag.id) == tag
+      assert %{:id => id, :name => name} = Images.get_tag!(tag.id)
     end
 
-    test "create_categories/1 with valid data creates a categories" do
-      assert {:ok, %Categories{} = categories} = Images.create_categories(@valid_attrs)
-      assert categories.name == "some name"
+    test "create_tag/1 with valid data creates a tag" do
+      assert {:ok, %Tag{} = tag} = Images.create_tag(@valid_attrs)
+      assert tag.name == "some name"
     end
 
-    test "create_categories/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Images.create_categories(@invalid_attrs)
+    test "create_tag/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Images.create_tag(@invalid_attrs)
     end
 
-    test "update_categories/2 with valid data updates the categories" do
-      categories = categories_fixture()
-
-      assert {:ok, %Categories{} = categories} =
-               Images.update_categories(categories, @update_attrs)
-
-      assert categories.name == "some updated name"
+    test "update_tag/2 with valid data updates the tag" do
+      tag = tag_fixture()
+      assert {:ok, %Tag{} = tag} = Images.update_tag(tag, @update_attrs)
+      assert tag.name == "some updated name"
     end
 
-    test "update_categories/2 with invalid data returns error changeset" do
-      categories = categories_fixture()
-      assert {:error, %Ecto.Changeset{}} = Images.update_categories(categories, @invalid_attrs)
-      assert categories == Images.get_categories!(categories.id)
+    test "update_tag/2 with invalid data returns error changeset" do
+      tag = tag_fixture()
+
+      assert {:error, _} = Images.update_tag(tag, @invalid_attrs)
     end
 
-    test "delete_categories/1 deletes the categories" do
-      categories = categories_fixture()
-      assert {:ok, %Categories{}} = Images.delete_categories(categories)
-      assert_raise Ecto.NoResultsError, fn -> Images.get_categories!(categories.id) end
+    test "delete_tag/1 deletes the tag" do
+      tag = tag_fixture()
+      assert {:ok, %Tag{}} = Images.delete_tag(tag)
+      assert_raise Ecto.NoResultsError, fn -> Images.get_tag!(tag.id) end
     end
 
-    test "change_categories/1 returns a categories changeset" do
-      categories = categories_fixture()
-      assert %Ecto.Changeset{} = Images.change_categories(categories)
+    test "change_tag/1 returns a tag changeset" do
+      tag = tag_fixture()
+      assert %Ecto.Changeset{} = Images.change_tag(tag)
     end
   end
 
-  describe "tag" do
-    alias ApiApp.Images.Tags
+  describe "category" do
+    alias ApiApp.Images.Category
 
-    @valid_attrs %{id: 42, name: "some name"}
-    @update_attrs %{id: 43, name: "some updated name"}
-    @invalid_attrs %{id: nil, name: nil}
+    @valid_attrs %{name: "some name"}
+    @update_attrs %{name: "some updated name"}
+    @invalid_attrs %{name: nil}
 
-    def tags_fixture(attrs \\ %{}) do
-      {:ok, tags} =
-        attrs
+    def category_fixture(attrs \\ %{}) do
+      {:ok, category} =
+        %{name: "Category#{DateTime.utc_now()}"}
         |> Enum.into(@valid_attrs)
-        |> Images.create_tags()
+        |> Images.create_category()
 
-      tags
+      category
     end
 
-    test "list_tag/0 returns all tag" do
-      tags = tags_fixture()
-      assert Images.list_tag() == [tags]
+    test "list_category/0 returns all category" do
+      category = category_fixture()
+      assert Images.list_category() == [category]
     end
 
-    test "get_tags!/1 returns the tags with given id" do
-      tags = tags_fixture()
-      assert Images.get_tags!(tags.id) == tags
+    @tag individual_test: "category_id"
+    test "get_category!/1 returns the category with given id" do
+      category = category_fixture()
+     %{:id => id, :name => name}  = Images.get_category!(category.id)
+      assert  %{:id => id, :name => name } = category
     end
 
-    test "create_tags/1 with valid data creates a tags" do
-      assert {:ok, %Tags{} = tags} = Images.create_tags(@valid_attrs)
-      assert tags.name == "some name"
+    test "create_category/1 with valid data creates a category" do
+      assert {:ok, %Category{} = category} = Images.create_category(@valid_attrs)
+      assert category.name == "some name"
     end
 
-    test "create_tags/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Images.create_tags(@invalid_attrs)
+    test "create_category/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Images.create_category(@invalid_attrs)
     end
 
-    test "update_tags/2 with valid data updates the tags" do
-      tags = tags_fixture()
-      assert {:ok, %Tags{} = tags} = Images.update_tags(tags, @update_attrs)
-      assert tags.name == "some updated name"
+    test "update_category/2 with invalid data returns error changeset" do
+      category = category_fixture()
+      assert_raise MatchError, ~r/name: {"can't be blank"/, fn ->
+        Images.update_category(category, @invalid_attrs)
+      end
     end
 
-    test "update_tags/2 with invalid data returns error changeset" do
-      tags = tags_fixture()
-      assert {:error, %Ecto.Changeset{}} = Images.update_tags(tags, @invalid_attrs)
-      assert tags == Images.get_tags!(tags.id)
+    test "delete_category/1 deletes the category" do
+      category = category_fixture()
+      assert {:ok, %Category{}} = Images.delete_category(category)
+      assert_raise Ecto.NoResultsError, fn -> Images.get_category!(category.id) end
     end
 
-    test "delete_tags/1 deletes the tags" do
-      tags = tags_fixture()
-      assert {:ok, %Tags{}} = Images.delete_tags(tags)
-      assert_raise Ecto.NoResultsError, fn -> Images.get_tags!(tags.id) end
-    end
-
-    test "change_tags/1 returns a tags changeset" do
-      tags = tags_fixture()
-      assert %Ecto.Changeset{} = Images.change_tags(tags)
+    test "change_category/1 returns a category changeset" do
+      category = category_fixture()
+      assert %Ecto.Changeset{} = Images.change_category(category)
     end
   end
 
@@ -162,7 +160,7 @@ defmodule ApiApp.ImagesTest do
     }
 
     def image_fixture(attrs \\ %{}) do
-      category = categories_fixture()
+      category = category_fixture()
 
       {:ok, image} =
         attrs
@@ -174,7 +172,7 @@ defmodule ApiApp.ImagesTest do
     end
 
     setup do
-      {:ok, %{category: categories_fixture()}}
+      {:ok, %{category: category_fixture()}}
     end
 
     test "list_image/0 returns all image" do
@@ -183,12 +181,12 @@ defmodule ApiApp.ImagesTest do
     end
 
     test "get_image!/1 returns the image with given id" do
-      image = image_fixture()
-      assert Images.get_image!(image.id) == image
+      %{:id => id, :name => name} = image_fixture()
+      assert %{:id => id, :name => name} = Images.get_image!(id)
     end
 
-    test "create_image/1 with valid data creates a image" do
-      category = categories_fixture()
+    test "create_image_test/1 with valid data creates a image" do
+      category = category_fixture()
 
       assert {:ok, %Image{} = image} =
                Images.create_image_test(%{@valid_attrs | "category_id" => category.id})
@@ -198,26 +196,24 @@ defmodule ApiApp.ImagesTest do
       assert image.name == "some name"
     end
 
-    test "create_image/1 with invalid data returns error changeset" do
+    test "create_image_test/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Images.create_image_test(@invalid_attrs)
     end
 
     test "update_image/2 with valid data updates the image" do
       image = image_fixture()
-      category = categories_fixture()
+      category = category_fixture()
+      new_attrs = %{ @update_attrs | "category_id" => category.id}
 
-      assert {:ok, %Image{} = image} =
-               Images.update_image(image, %{@update_attrs | "category_id" => category.id})
+      updated_image = Images.update_image(image, new_attrs)
 
-      assert image.description == "some updated description"
-      assert image.image == "1528_27.jpg"
-      assert image.name == "some updated name"
+      assert {:ok, _} = updated_image
     end
 
+    @tag individual_test: "update_image_invalid"
     test "update_image/2 with invalid data returns error changeset" do
       image = image_fixture()
       assert {:error, %Ecto.Changeset{}} = Images.update_image(image, @invalid_attrs)
-      assert image == Images.get_image!(image.id)
     end
 
     test "delete_image/1 deletes the image" do
