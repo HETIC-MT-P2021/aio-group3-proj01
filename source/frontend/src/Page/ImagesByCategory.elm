@@ -29,7 +29,7 @@ type alias Image =
     { id : Int
     , name : String
     , description : String
-    , url : String
+    , image_original_url : String
     }
 
 
@@ -39,7 +39,7 @@ decodeImage =
      (Decode.field "id" Decode.int)
      (Decode.field "name" Decode.string)
      (Decode.field "description" Decode.string)
-     (Decode.field "url" Decode.string)
+     (Decode.field "image_original_url" Decode.string)
 
 type Msg
     = GotImages (Result Http.Error (List Image))
@@ -99,7 +99,7 @@ view model =
 viewImage : Image -> Html Msg
 viewImage image =
     div [class "card"] [
-        img [src ("http://localhost:4000" ++ image.url), class "card-img-top"][]
+        img [src ("http://localhost:4000" ++ image.image_original_url), class "card-img-top"][]
         , div [class "card-body"] [
             p [class "card-text"] [text image.description]
         ]
