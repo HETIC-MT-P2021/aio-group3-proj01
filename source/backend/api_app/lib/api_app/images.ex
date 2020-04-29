@@ -299,7 +299,7 @@ defmodule ApiApp.Images do
 
     case %Image{}
          |> Image.changeset(%{attrs | "image" => attrs["image"].filename})
-         |> Ecto.Changeset.cast_assoc(:category, with: &Categories.changeset/2)
+         |> Ecto.Changeset.cast_assoc(:category, with: &Category.changeset/2)
          |> Repo.insert() do
       {:ok, image} ->
         {:ok, _image_name} = ImageHandler.store({attrs["image"], image})

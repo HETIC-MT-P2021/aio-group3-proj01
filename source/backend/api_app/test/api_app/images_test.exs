@@ -196,7 +196,7 @@ defmodule ApiApp.ImagesTest do
     test "update_image/2 with valid data updates the image" do
       image = image_fixture()
       category = category_fixture()
-      new_attrs = %{ @update_attrs | "category_id" => category.id}
+      new_attrs = %{@update_attrs | "category_id" => category.id}
 
       updated_image = Images.update_image(image, new_attrs)
 
