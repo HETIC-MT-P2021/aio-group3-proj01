@@ -184,3 +184,24 @@ i.fa-times {
 .tags-badges a {
   margin: 5px;
 }
+
+.image-card {
+  width: 300px;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  margin: 2px;
+  transition: transform .3s;
+}
+
+.image-card:hover {
+  transform: scale(1.1);
+}
+
+.images-list div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10vh; 
+}
+
