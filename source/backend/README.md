@@ -34,7 +34,7 @@ Our images entities have the following properties:
 #### Get images
 - URL
 
-    `/images`
+    `/image`
 - Method
 
     `GET`
@@ -45,7 +45,7 @@ Our images entities have the following properties:
 #### Get image by id
 - URL
 
-    `/images:id`
+    `/image/:id`
 - Method
 
     `GET`
@@ -64,15 +64,16 @@ Our images entities have the following properties:
 - Data params
     ```json
     {
-        "id": "33",
         "description": "this is the best image ever",
         "image": "/file_path",
-        "category": "sport",
+        "category_id": 1,
         "tags": ["soccer"]
     }
     ```
 
-    > If `category` or `tags` doen't exist, they'll be created.
+    > Be sure to add a category before
+    > If `tags` doen't exist, they'll be created.
+  
 
 #### Edit images
 - URL
@@ -84,11 +85,10 @@ Our images entities have the following properties:
 - Data params
     ```json
     {
-        "id": "33",
         "description": "this is the worse image ever",
-        "image": "/file_path",
-        "category": "sport",
-        "tags": ["soccer"]
+        "image": image object,
+        "category": 2,
+        "tags": ["cats"]
     }
     ```
 
@@ -108,7 +108,7 @@ Our images entities have the following properties:
 #### Get images by category
 - URL
 
-    `/images/categories/:id`
+    `category/images/:id`
 
     > The id is the ID of the category you are looking for.
 - Method
@@ -121,7 +121,7 @@ Our images entities have the following properties:
 #### Get images by tag
 - URL
 
-    `/images/tags/:id`
+    `tag/images/:id`
 
     > The id is the ID of the tag you are looking for.
 - Method
@@ -160,8 +160,9 @@ Our categories entities have the following properties:
     `POST`
 - Data params
     ```json
-    {
-        "name": "sport"
+    { "category": {
+      "name": "sport"
+        }
     }
     ```
 
@@ -174,8 +175,9 @@ Our categories entities have the following properties:
     `PUT`
 - Data params
     ```json
-    {
-        "name": "Sport"
+    { "category": {
+      "name": "beach"
+        }
     }
     ```
 
@@ -202,7 +204,7 @@ Our tags entities have the following properties:
 #### Get tags
 - URL
 
-    `/tags`
+    `/tag`
 - Method
 
     `GET`
@@ -213,15 +215,16 @@ Our tags entities have the following properties:
 #### Add tags
 - URL
 
-    `/tags`
+    `/tag`
 - Method
 
     `POST`
 - Data params
 
     ```json
-    {
-        "name": "soccer"
+    { "tag": {
+      "name": "family"
+        }
     }
     ```
 
@@ -229,21 +232,22 @@ Our tags entities have the following properties:
 
 - URL
 
-    `/tags/:id`
+    `/tag/:id`
 - Method
 
     `PUT`
 - Data params
     ```json
-    {
-        "name": "football"
+    { "tag": {
+      "name": "sport"
+        }
     }
     ```
 
 #### Remove tags
 - URL
 
-    `/tags/:id`
+    `/tag/:id`
 - Method
 
     `DELETE`
