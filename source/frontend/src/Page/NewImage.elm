@@ -25,7 +25,7 @@ type alias Model =
         session : Session,
         description: String,
         category_id: String,
-        --tags: List Tag,
+        tags: String,
         image: Maybe File,
         name: String
     }
@@ -36,10 +36,10 @@ type alias Category =
         , name: String
     }
 
-type alias Tag = 
-    {
-        data : List Category
-    }
+--type alias Tag = 
+--    {
+--        data : List Category
+--    }
 
 init : Session -> ( Model, Cmd Msg )
 init session =
@@ -50,7 +50,7 @@ init session =
             , error = Nothing
             , description = ""
             , category_id = ""
-            --, tags = []
+            , tags = ""
             , image = Nothing
             , name = " "
         }
@@ -58,15 +58,12 @@ init session =
         )
 
 --- API
-type ImagePart = 
-    String
-    | List
 
 encode : Model -> List (String, Encode.Value)
 encode model =
     [("description", Encode.string model.description)
     ,("category_id", Encode.string model.category_id)
-    --,("tags", Encode.list model.tags)
+    ,("tags", Encode.string model.tags)
     ,("name", Encode.string model.name)
     ]
 
@@ -79,15 +76,13 @@ save model =
           Http.jsonBody (Encode.object [("image", Encode.object (encode model) ) ])
      
         Just file ->
-            -- SHIT
-            Http.multipartBody
-                (Http.filePart "image" file
-                :: List.map
-                        (\( l, v ) ->
-                            Http.stringPart (l) (Encode.encode 0 v)
-                        )
-                        (encode model)
-                )
+            Http.multipartBody [
+                Http.filePart "image" file
+                , Http.stringPart "description" model.description
+                , Http.stringPart "category_id" model.category_id
+                , Http.stringPart "name" model.name
+                --, Http.stringPart "tags" model.tags
+            ]
                             
                         
   in
@@ -125,7 +120,7 @@ viewForm model =
             [ div [class "form-group"][label [for "image-field"] [text "Image"], imageBtn]
             , div [class "form-group"][label [for "name-field"] [text "Name"], viewInput "name" "form-control" "name-field" "text" "Name" model.name Name]
             , div [class "form-group"][label [for "category-field"] [text "Category"], viewCategoriesSelect model.categories CategoryMsg]
-            --, div [class "form-group"][label [for "tags-field"] [text "Tags"],viewInput "tags" "form-control" "tags-field" "text" "Tags" (String.join "," model.tags) Tags]
+            , div [class "form-group"][label [for "tags-field"] [text "Tags"],viewInput "tags" "form-control" "tags-field" "text" "Tags" model.tags Tags]
             , div [class "form-group"][label [for "description-field"] [text "Description"],viewInput "description" "form-control" "description-field" "text" "Description" model.description Description]
             , button [class "btn btn-primary", onClick Save][text "Create"]
             , viewValidation model
@@ -149,34 +144,7 @@ viewOption: Category -> Html msg
 viewOption category = 
     option [value (String.fromInt category.id)] [text category.name]
 
-{-
-view : Model -> {title : String, content : Html Msg}
-view model =
 
-    { title = "New image"
-    , content =
-        let 
-            imageBtn =
-                case model.image of
-                    Nothing ->
-                            button [ onClick Image ] [ text "Add image" ]
-                    Just image ->
-                            button [ onClick ClearFile ] [ text ("Remove " ++ File.name image) ]
-        in
-        div []
-            [ label [] [ text "Name" ]
-            , input [ type_ "text", value model.name, onInput ChangedName ] []
-            , label [] [ text "Description" ]
-            , input [ type_ "text", value model.description, onInput ChangedDescription ] []
-            , label [] [ text "Category" ]
-            , input [ type_ "text", value model.category, onInput ChangedCategory] []
-            , label [] [ text "Tags" ]
-            , input [ type_ "text", value model.tags, onInput ChangedTags ] []
-            , imageBtn
-            , button [ onClick Save ] [ text "Save" ]
-            ]
-    }
--}
 -- UPDATE
 
 
@@ -185,7 +153,7 @@ type Msg =
     | GotCategories (Result Http.Error (List Category))
     | Image
     | CategoryMsg String
-    --| Tags String
+    | Tags String
     | Description String
     | Name String
     -- add image
@@ -193,9 +161,9 @@ type Msg =
     | ClearFile
     | Save
     | Saved (Result Http.Error Int)
-    | ChangedName String
-    | ChangedDescription String
-    | ChangedCategory String
+    | ChangedTags String
+
+
     --| ChangedTags String
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -213,8 +181,8 @@ update msg model =
         Description description ->
             ({model | description = description}, Cmd.none)
 
-        --Tags tags ->
-            --({model | tags = String.split "," tags}, Cmd.none)
+        Tags str ->
+            ({model | tags = str}, Cmd.none)
 
         Name name ->
             ({model | name = name}, Cmd.none)
@@ -255,17 +223,8 @@ update msg model =
         Saved (Err _) ->
             ( model, Cmd.none)
 
-        ChangedName str ->
-            ({ model | name = str}, Cmd.none)
-            
-        ChangedDescription str ->
-            ({ model | description = str}, Cmd.none)
-
-        ChangedCategory str ->
-            ({ model | category_id = str}, Cmd.none)
-        
-        --ChangedTags str ->
-            --({ model | tags = String.split "," str}, Cmd.none)
+        ChangedTags str ->
+            ({ model | tags = str}, Cmd.none)
 
 
 
