@@ -6,7 +6,7 @@ module Page.ImageById exposing (Model, Msg, init, subscriptions, toSession, upda
 import Browser.Dom as Dom
 import Browser.Navigation as Nav
 import Html exposing (..)
-import Html.Attributes exposing (class, value, src)
+import Html.Attributes exposing (class, value, src, style)
 import Html.Events exposing (onInput, onClick)
 
 import Session exposing (Session)
@@ -125,7 +125,7 @@ viewImage image =
     div [class "image-full"] [
         a [class "category-tags badge badge-primary", Route.href (Route.ImagesByCategory image.category.id)][text (image.category.name)]
         , viewTags image.tags
-        , img [src ("http://localhost:4000" ++ image.image_original_url)][]
+        , div [ class "full-img", style "background-image" ("url(\"http://localhost:4000" ++ (image.image_original_url ++ "\")"))][]
         , div [class "card-details"] [
             h1 [class "name"] [text image.name]
             , p [class "card-text"] [text image.description]

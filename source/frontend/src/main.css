@@ -143,10 +143,16 @@ i.fa-times {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  max-height: 60vh;
 }
 
-
+.full-img {
+  background-color: black;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 50vh;
+}
 .card-details {
   text-align: left;
   padding-left: 30px;
