@@ -23,6 +23,7 @@ type Page
     | ImagesByTag
     | ImageById
     | EditCategory
+    | EditTag
 
 
 {-| Take a page's Html and frames it with a header and footer.

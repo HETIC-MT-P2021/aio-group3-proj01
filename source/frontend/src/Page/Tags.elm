@@ -65,7 +65,12 @@ viewTag tag =
     div [class "link-card"] [
         a [Route.href (Route.ImagesByTag tag.id)] [text tag.name]
         , 
-        i [class "fas fa-times", onClick (DeleteTagMsg tag.id)][]
+        div [ class "div-buttons"] [
+            i [class "fas fa-times", onClick (DeleteTagMsg tag.id)][]
+            , a [Route.href (Route.EditTag tag.id)][
+                    i [class "fas fa-pen"][]
+            ]
+        ]
     ]
 
 -- UPDATE

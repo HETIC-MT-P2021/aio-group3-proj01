@@ -13,6 +13,7 @@ import Page.ImagesByCategory as ImagesByCategory
 import Page.ImagesByTag as ImagesByTag
 import Page.ImageById as ImageById
 import Page.EditCategory as EditCategory
+import Page.EditTag as EditTag
 import Page.Tags as Tags
 import Page.Categories as Categories
 import Page.Blank as Blank
@@ -33,6 +34,7 @@ type Model
     | ImagesByTag Int ImagesByTag.Model
     | ImageById Int ImageById.Model
     | EditCategory Int EditCategory.Model
+    | EditTag Int EditTag.Model
 
 -- MODEL
 
@@ -103,6 +105,9 @@ view model =
         EditCategory _ id ->
             viewPage Page.EditCategory EditCategoryMsg (EditCategory.view id)
 
+        EditTag _ id ->
+            viewPage Page.EditTag EditTagMsg (EditTag.view id)
+
 
 -- UPDATE
 
@@ -119,6 +124,7 @@ type Msg
     | ImagesByTagMsg ImagesByTag.Msg
     | ImageByIdMsg ImageById.Msg
     | EditCategoryMsg EditCategory.Msg
+    | EditTagMsg EditTag.Msg
 
 toSession : Model -> Session
 toSession page =
@@ -155,6 +161,9 @@ toSession page =
 
         EditCategory _ id ->
             EditCategory.toSession id
+
+        EditTag _ id ->
+            EditTag.toSession id
 
 
 changeRouteTo : Maybe Route -> Model -> ( Model, Cmd Msg )
@@ -205,6 +214,10 @@ changeRouteTo maybeRoute model =
         Just (Route.EditCategory id) ->
             EditCategory.init session id
                 |> updateWith (EditCategory id) EditCategoryMsg model
+
+        Just (Route.EditTag id) ->
+            EditTag.init session id
+                |> updateWith (EditTag id) EditTagMsg model
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -275,6 +288,10 @@ update msg model =
             EditCategory.update subMsg category
                 |> updateWith (EditCategory id) EditCategoryMsg model
 
+        ( EditTagMsg subMsg, EditTag id tag ) ->
+            EditTag.update subMsg tag
+                |> updateWith (EditTag id) EditTagMsg model
+
         ( _, _ ) ->
             -- Disregard messages that arrived for the wrong page.
             ( model, Cmd.none )
@@ -326,3 +343,6 @@ subscriptions model =
 
         EditCategory _ id ->
             Sub.map EditCategoryMsg (EditCategory.subscriptions id)
+
+        EditTag _ id ->
+            Sub.map EditTagMsg (EditTag.subscriptions id)

@@ -107,17 +107,6 @@ h1 {
   flex-direction: column;
 }
 
-.tags-list i {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  display: none;
-}
-.tags-list .link-card:hover i {
-  display: block;
-}
 
 .div-buttons i {
   margin: 5px;

@@ -22,6 +22,7 @@ type Route
     | ImagesByTag Int
     | ImageById Int
     | EditCategory Int
+    | EditTag Int
 
 
 parser : Parser (Route -> a) a
@@ -36,6 +37,7 @@ parser =
         , Parser.map ImagesByTag (s "tag" </> int)
         , Parser.map ImageById (s "image" </> int)
         , Parser.map EditCategory (s "edit-category" </> int)
+        , Parser.map EditTag (s "edit-tag" </> int)
         ]
 
 
@@ -102,5 +104,8 @@ routeToPieces page =
         
         EditCategory id ->
             [ "edit-category", String.fromInt id]
+        
+        EditTag id ->
+            [ "edit-tag", String.fromInt id]
 
         

@@ -1,4 +1,4 @@
-module Page.EditCategory exposing (Model, Msg, init, subscriptions, toSession, update, view)
+module Page.EditTag exposing (Model, Msg, init, subscriptions, toSession, update, view)
 
 {-| The homepage. You can get here via either the / or /#/ routes.
 -}
@@ -22,28 +22,28 @@ import Json.Encode as Encode
 type alias Model =
     { 
         session : Session
-        , category: Category
+        , tag: Tag
         , error : Maybe String
         , id: Int
         , name: String
         , modified: String
     }
 
-type alias Category =
+type alias Tag =
     { id : Int
     , name : String
     }
 
 
-decodeCategory : Decoder Category
-decodeCategory =
-   Decode.map2 Category
+decodeTag : Decoder Tag
+decodeTag =
+   Decode.map2 Tag
      (Decode.field "id" Decode.int)
      (Decode.field "name" Decode.string)
 
 type Msg = 
-    GotCategory (Result Http.Error (Category))
-    | EditCategoryMsg Int
+    GotTag (Result Http.Error (Tag))
+    | EditTagMsg Int
     | Name String
     | EditedMsg (Result Http.Error ())
 
@@ -52,19 +52,19 @@ init session id =
     (
     { 
         session = session
-        , category = {id = id, name = ""}
+        , tag = {id = id, name = ""}
         , error = Nothing
         , id = id
         , modified = ""
         , name = ""
     }
-    , getCategory id
+    , getTag id
     )
-getCategory : Int -> Cmd Msg
-getCategory id =
+getTag : Int -> Cmd Msg
+getTag id =
     Http.get
-        { url = "http://localhost:4000/api/categories/" ++ (String.fromInt id)
-        , expect = Http.expectJson GotCategory (Decode.field "data" (decodeCategory))
+        { url = "http://localhost:4000/api/tags/" ++ (String.fromInt id)
+        , expect = Http.expectJson GotTag (Decode.field "data" (decodeTag))
         }
 
 
@@ -72,14 +72,14 @@ getCategory id =
 
 view : Model -> { title : String, content : Html Msg }
 view model =
-    { title = "Edit category"
+    { title = "Edit tag"
     , content =      
             div [class "container page"] [  
                 case model.error of
                     Nothing ->
-                        case model.category of
-                            category ->
-                                viewForm model category
+                        case model.tag of
+                            tag ->
+                                viewForm model tag
 
                     Just error ->
                         div [ ]
@@ -88,12 +88,12 @@ view model =
     }
 
 
-viewForm : Model -> Category -> Html Msg
-viewForm model category=
+viewForm : Model -> Tag -> Html Msg
+viewForm model tag=
   form []
     [ 
-        div [class "form-group"][label [for "name-field"] [text "Name"], viewInput "form-control" "name-field" "text" "Name" category.name Name]
-        , button [type_ "submit", class "btn btn-primary", onClick (EditCategoryMsg category.id) ][text "Change name"]
+        div [class "form-group"][label [for "name-field"] [text "Name"], viewInput "form-control" "name-field" "text" "Name" tag.name Name]
+        , button [type_ "submit", class "btn btn-primary", onClick (EditTagMsg tag.id) ][text "Change name"]
         , viewValidation model
     ]
 
@@ -101,7 +101,7 @@ viewForm model category=
 viewValidation : Model -> Html msg
 viewValidation model =
   if String.length model.modified > 1 then
-    div [ style "color" "green" ] [ text "Category name changed!" ]
+    div [ style "color" "green" ] [ text "Tag name changed!" ]
   else 
     div [] []
 
@@ -115,36 +115,36 @@ viewInput c i t p v toMsg =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GotCategory (Ok category) ->
+        GotTag (Ok tag) ->
             ( { model
-                | category = category
+                | tag = tag
                 , error = Nothing
               }
             , Cmd.none
             )
 
-        GotCategory (Err err) ->
+        GotTag (Err err) ->
             let
                 _ =
                     Debug.log "An error occured" err
             in
             ( { model
                 | error = Just <| errorToString err
-                , category = {id = model.id, name = ""}
+                , tag = {id = model.id, name = ""}
               }
             , Cmd.none
             )
         
         Name newName ->
             ({
-                model | category = {id = model.category.id, name = newName}
+                model | tag = {id = model.tag.id, name = newName}
             }, Cmd.none)
 
-        EditCategoryMsg id ->
-            (model, editCategory model)
+        EditTagMsg id ->
+            (model, editTag model)
 
-        EditedMsg (Ok category) ->
-            ({model | modified = "Category modified"}, Cmd.none)
+        EditedMsg (Ok tag) ->
+            ({model | modified = "Tag modified"}, Cmd.none)
 
         EditedMsg (Err err) ->
             (model, Cmd.none)
@@ -153,19 +153,19 @@ update msg model =
 
 -- HTTP
 
-editCategory: Model -> Cmd Msg
-editCategory model = 
+editTag: Model -> Cmd Msg
+editTag model = 
     let
         body =
             Http.jsonBody <|
                     Encode.object
-                        [ ( "category", Encode.object
-                            [ ( "name", Encode.string model.category.name), ( "id", Encode.string (String.fromInt model.category.id) ) ] ) ]
+                        [ ( "tag", Encode.object
+                            [ ( "name", Encode.string model.tag.name), ( "id", Encode.string (String.fromInt model.tag.id) ) ] ) ]
     in
         Http.request
             { method = "PUT"
             , headers = []
-            , url = "http://localhost:4000/api/categories/" ++ (String.fromInt model.category.id)
+            , url = "http://localhost:4000/api/tags/" ++ (String.fromInt model.tag.id)
             , body = body
             , expect = Http.expectWhatever EditedMsg
             , timeout = Nothing
