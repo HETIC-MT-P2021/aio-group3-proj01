@@ -36,9 +36,6 @@ config :waffle,
   storage: Waffle.Storage.Local,
   storage_dir_prefix: "priv/static/"
 
-config :husky,
-      pre_commit: "mix format && mix credo --strict",
-      pre_push: "mix format --check-formatted && mix credo --strict && mix test"
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
