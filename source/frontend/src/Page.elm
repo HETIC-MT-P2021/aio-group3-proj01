@@ -70,7 +70,7 @@ viewFooter : Html msg
 viewFooter =
     footer [ class "footer"]
         [ div [ class "container" ]
-            [ a [ class "logo-font", href "/" ] [ text "Gallery." ]
+            [ a [ class "logo-font", Route.href Route.Home ] [ text "Gallery." ]
             , span [ class "attribution" ]
                 [ text "An interactive learning project from "
                 , a [ href "https://github.com/HETIC-MT-P2021/aio-group3-proj01" ] [ text "HETIC group 3" ]

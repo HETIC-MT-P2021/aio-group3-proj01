@@ -168,7 +168,7 @@ update msg model =
             (model, deleteImage id)
 
         DeletedMsg _ ->
-            (model, Nav.reload)
+            (model, Route.replaceUrl (Session.navKey model.session) Route.Home)
 
 
 
