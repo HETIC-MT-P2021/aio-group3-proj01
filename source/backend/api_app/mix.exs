@@ -47,7 +47,9 @@ defmodule ApiApp.MixProject do
       {:phoenix_live_view, "~> 0.12"},
       {:floki, ">= 0.0.0", only: :test},
       {:telemetry_poller, "~> 0.4"},
-      {:telemetry_metrics, "~> 0.4"}
+      {:telemetry_metrics, "~> 0.4"},
+      {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:husky, "~> 1.0", only: :dev, runtime: false}
     ]
   end
 
