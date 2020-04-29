@@ -19,6 +19,7 @@ body {
   color: #293c4b;
   width: 100vw;
   height: 100vh;
+  padding-bottom: 10vh;
 }
 
 h1 {
@@ -26,7 +27,7 @@ h1 {
 }
 
 .footer {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 50vw;
   transform: translateX(-50%);
@@ -92,7 +93,7 @@ h1 {
   position: relative;
 }
 
-.link-card i {
+.link-card .div-buttons {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -101,8 +102,14 @@ h1 {
   display: none;
 }
 
-.link-card:hover i {
-  display: block;
+.link-card:hover .div-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.div-buttons i {
+  margin: 5px;
 }
 
 .link-card:hover {
@@ -135,10 +142,12 @@ h1 {
   max-height: 60vh;
 }
 
+
 .card-details {
   text-align: left;
   padding-left: 30px;
   padding-top: 20px;
+  margin-bottom: 30vh;
 }
 
 .buttons {
@@ -153,4 +162,21 @@ h1 {
 
 .buttons .btn {
   margin: 10px;
+}
+
+.category-tags {
+  position: absolute;
+  right: 30px;
+  top: 90px;
+  font-size: 20px;
+}
+
+.tags-badges {
+  position: absolute;
+  right: 30px;
+  top: 120px;
+}
+
+.tags-badges a {
+  margin: 5px;
 }

@@ -32,16 +32,43 @@ type alias Image =
     , name : String
     , description : String
     , image_original_url : String
+    , category: Category
+    , tags: List Tag
+    }
+
+type alias Category = 
+    {
+        id: Int,
+        name: String
+    }
+
+type alias Tag = 
+    {
+        id: Int,
+        name: String
     }
 
 
 decodeImage : Decoder Image
 decodeImage =
-   Decode.map4 Image
+   Decode.map6 Image
      (Decode.field "id" Decode.int)
      (Decode.field "name" Decode.string)
      (Decode.field "description" Decode.string)
      (Decode.field "image_original_url" Decode.string)
+     (Decode.field "category" (Decode.map2 Category 
+        (Decode.field "id" Decode.int)
+        (Decode.field "name" Decode.string)))
+     (Decode.field "tags" 
+        (Decode.list 
+            (Decode.field "data"
+                (Decode.map2 Tag 
+                    (Decode.field "id" Decode.int)
+                    (Decode.field "name" Decode.string)
+                )
+            )
+        )
+     )
 
 type Msg = 
     GotImages (Result Http.Error (Image))
@@ -96,13 +123,22 @@ view model =
 viewImage : Image -> Html Msg
 viewImage image =
     div [class "image-full"] [
-        img [src ("http://localhost:4000" ++ image.image_original_url)][]
+        a [class "category-tags badge badge-primary", Route.href (Route.ImagesByCategory image.category.id)][text (image.category.name)]
+        , viewTags image.tags
+        , img [src ("http://localhost:4000" ++ image.image_original_url)][]
         , div [class "card-details"] [
             h1 [class "name"] [text image.name]
             , p [class "card-text"] [text image.description]
         ]
     ]
 
+viewTags: List Tag -> Html Msg
+viewTags tags = 
+    div [ class "tags-badges"] (List.map viewTag tags)
+
+viewTag: Tag -> Html Msg
+viewTag tag =
+   a [class "tag badge badge-secondary", Route.href (Route.ImagesByTag tag.id)] [ text tag.name]
 -- UPDATE
 
 update : Msg -> Model -> ( Model, Cmd Msg )
