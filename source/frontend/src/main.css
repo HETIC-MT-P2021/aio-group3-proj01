@@ -170,3 +170,13 @@ h1 {
   top: 90px;
   font-size: 20px;
 }
+
+.tags-badges {
+  position: absolute;
+  right: 30px;
+  top: 120px;
+}
+
+.tags-badges a {
+  margin: 5px;
+}
