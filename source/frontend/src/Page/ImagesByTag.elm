@@ -5,7 +5,7 @@ module Page.ImagesByTag exposing (Model, Msg, init, subscriptions, toSession, up
 
 import Browser.Dom as Dom
 import Html exposing (..)
-import Html.Attributes exposing (class, value, src)
+import Html.Attributes exposing (class, value, src, style)
 import Html.Events exposing (onInput)
 
 import Session exposing (Session)
@@ -100,12 +100,8 @@ view model =
 
 viewImage : Image -> Html Msg
 viewImage image =
-    div [class "card"] [
-        img [src ("http://localhost:4000" ++ image.image_original_url), class "card-img-top"][]
-        , a [class "card-body", Route.href (Route.ImageById image.id)] [
-            p [class "card-text"] [text image.name]
-        ]
-    ]
+    a [class "image-card", style "background-image" ("url(\"http://localhost:4000" ++ (image.image_original_url ++ "\")")), Route.href (Route.ImageById image.id)] []
+
 -- UPDATE
 
 update : Msg -> Model -> ( Model, Cmd Msg )

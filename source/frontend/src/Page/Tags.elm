@@ -60,6 +60,8 @@ viewTags: List Tag -> Html Msg
 viewTags tags = 
     div [ class "tags-list"] (List.map viewTag tags)
 
+
+-- viewTag
 viewTag: Tag -> Html Msg
 viewTag tag = 
     div [class "link-card"] [
