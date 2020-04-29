@@ -29,6 +29,9 @@ With docker :
 
 Refer to the [DOCKER.md](DOCKER.md) for setup
 
+## Use advice
+
+Before creating an image, you must at least have two categories in order for the select options to work.
 
 ## Development process
 
