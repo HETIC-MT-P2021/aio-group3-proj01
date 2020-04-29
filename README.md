@@ -63,16 +63,30 @@ It should use the same guidelines as [COMMIT_CONVENTIONS](COMMIT_CONVENTIONS.md)
 Example: `feat_add-image-tag-database-relation`.
 
 ## Git hooks
-Git hooks are placed in `.git/hooks`. They are installed when you run `npm install`.
+Git hooks are placed in `.git/hooks`. The only existing hook for now is a pre-commit hook that will run mix commands for backend part.
 
 ## Linter
 
+For now the only existing linter is [Credo](https://github.com/rrrene/credo) for backend part.
+
 ## Continuous Integration (CI)
+
+A CI pipeline is configured for this project and is accessible in the [CI.yaml](.github/workflows/CI.yaml) file.
+
+The pipeline will run 3 different jobs: 
+- Dependencies check
+- Linter
+- Tests
+
+The pipeline will be triggered automatically when creating a new Pull Request and on each push on it.
+It will also be triggered on push on `master`and `dev` branches.
 
 ## Featured documentation
 
 API documentation : [link](source/backend/README.md)
 
 Front documentation : [link](source/frontend/README.md)
+
+Wiki : [link](https://github.com/HETIC-MT-P2021/aio-group3-proj01/wiki)
 
 [1]: https://medium.com/better-programming/string-case-styles-camel-pascal-snake-and-kebab-case-981407998841
