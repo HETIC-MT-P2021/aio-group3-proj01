@@ -180,3 +180,40 @@ h1 {
 .tags-badges a {
   margin: 5px;
 }
+
+.list-images {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.image-card {
+  width: 300px;
+  min-height: 300px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  transition: transform .3s;
+  margin: 2px;
+}
+
+.image-card:hover {
+  transform: scale(1.2) ;
+}
+
+.images-list div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.images-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
