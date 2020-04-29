@@ -32,16 +32,27 @@ type alias Image =
     , name : String
     , description : String
     , image_original_url : String
+    , category: Category
+    }
+
+type alias Category = 
+    {
+        id: Int,
+        name: String
     }
 
 
 decodeImage : Decoder Image
 decodeImage =
-   Decode.map4 Image
+   Decode.map5 Image
      (Decode.field "id" Decode.int)
      (Decode.field "name" Decode.string)
      (Decode.field "description" Decode.string)
      (Decode.field "image_original_url" Decode.string)
+     (Decode.field "category" (Decode.map2 Category 
+        (Decode.field "id" Decode.int)
+        (Decode.field "name" Decode.string))
+     )
 
 type Msg = 
     GotImages (Result Http.Error (Image))
@@ -96,7 +107,8 @@ view model =
 viewImage : Image -> Html Msg
 viewImage image =
     div [class "image-full"] [
-        img [src ("http://localhost:4000" ++ image.image_original_url)][]
+        a [class "category-tags badge badge-primary", Route.href (Route.ImagesByCategory image.category.id)][text (image.category.name)]
+        , img [src ("http://localhost:4000" ++ image.image_original_url)][]
         , div [class "card-details"] [
             h1 [class "name"] [text image.name]
             , p [class "card-text"] [text image.description]
