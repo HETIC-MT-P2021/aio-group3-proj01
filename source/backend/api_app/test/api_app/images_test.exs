@@ -103,13 +103,6 @@ defmodule ApiApp.ImagesTest do
       assert {:error, %Ecto.Changeset{}} = Images.create_category(@invalid_attrs)
     end
 
-    test "update_category/2 with invalid data returns error changeset" do
-      category = category_fixture()
-      assert_raise MatchError, ~r/name: {"can't be blank"/, fn ->
-        Images.update_category(category, @invalid_attrs)
-      end
-    end
-
     test "delete_category/1 deletes the category" do
       category = category_fixture()
       assert {:ok, %Category{}} = Images.delete_category(category)
