@@ -15,6 +15,7 @@ import Http exposing (Error(..))
 import Json.Decode as Decode exposing (Decoder, int, string)
 import Json.Encode exposing (encode, int, list, string)
 import Json.Encode as Encode
+import Route exposing (Route)
 
 -- MODEL
 
@@ -89,7 +90,7 @@ save model =
   Http.post
     { url = "http://localhost:4000/api/image"
     , body = body
-    , expect = Http.expectJson Saved Decode.int
+    , expect = Http.expectWhatever Saved
     }
 
 
@@ -160,7 +161,7 @@ type Msg =
     | FileSelected File
     | ClearFile
     | Save
-    | Saved (Result Http.Error Int)
+    | Saved (Result Http.Error ())
     | ChangedTags String
 
 
@@ -218,7 +219,7 @@ update msg model =
             ( model, save model)
 
         Saved (Ok i) ->
-            ( {model | image = Nothing}, Cmd.none)
+            ( {model | image = Nothing}, Route.replaceUrl (Session.navKey model.session) Route.Home)
 
         Saved (Err _) ->
             ( model, Cmd.none)
