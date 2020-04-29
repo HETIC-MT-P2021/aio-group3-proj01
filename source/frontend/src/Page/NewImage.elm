@@ -142,7 +142,7 @@ viewForm model =
         [ div [ class "form-group" ] [ label [ for "image-field" ] [ text "Image" ], imageBtn ]
         , div [ class "form-group" ] [ label [ for "name-field" ] [ text "Name" ], viewInput "name" "form-control" "name-field" "text" "Name" model.name Name ]
         , div [ class "form-group" ] [ label [ for "category-field" ] [ text "Category" ], viewCategoriesSelect model.categories CategoryMsg ]
-        , div [ class "form-group" ] [ label [ for "tags-field" ] [ text "Tags" ], viewInput "tags" "form-control" "tags-field" "text" "Tags" model.tags Tags ]
+        , div [ class "form-group" ] [ label [ for "tags-field" ] [ text "Tags (separate with whitespace)" ], viewInput "tags" "form-control" "tags-field" "text" "Tags" model.tags Tags ]
         , div [ class "form-group" ] [ label [ for "description-field" ] [ text "Description" ], viewInput "description" "form-control" "description-field" "text" "Description" model.description Description ]
         , button [ class "btn btn-primary", onClick Save ] [ text "Create" ]
         , viewValidation model
